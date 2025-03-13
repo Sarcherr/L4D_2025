@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 目前框架可能用不上，暂时弃用
+/// </summary>
 public class Entity : IEntity
 {
     /// <summary>
