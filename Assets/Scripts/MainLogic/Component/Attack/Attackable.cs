@@ -1,18 +1,41 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attackable : MonoBehaviour
+/// <summary>
+/// 攻击组件
+/// </summary>
+public class Attackable
 {
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// 发动攻击
+    /// </summary>
+    public void GenerateAttack()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
+}
+
+/// <summary>
+/// 攻击请求容器
+/// </summary>
+public struct Attack
+{
+    /// <summary>
+    /// 攻击者
+    /// </summary>
+    public UnitData Origin;
+    /// <summary>
+    /// 攻击目标
+    /// </summary>
+    public UnitData Target;
+    /// <summary>
+    /// 随机系数
+    /// </summary>
+    public (float min, float max) RandomCoefficient;
+    /// <summary>
+    /// Ego消耗
+    /// </summary>
+    public List<Ego> EgoComsumption;
 }
