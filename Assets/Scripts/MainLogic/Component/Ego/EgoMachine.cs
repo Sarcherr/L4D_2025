@@ -4,20 +4,34 @@ using System;
 public class EgoMachine
 {
     /// <summary>
+    /// 攻击组件所属控制器
+    /// </summary>
+    public IController Controller;
+    /// <summary>
     /// 所属全部单位的Ego条容器
     /// </summary>
     public Dictionary<string, EgoContainer> UnitEgoContainers = new();
 
-    public EgoMachine(List<UnitData> unitDatas)
+    public EgoMachine(IController controller)
     {
-        foreach (var unitData in unitDatas)
+        foreach (var unitData in controller.Units.Values)
         {
             UnitEgoContainers.Add(unitData.Name, new(unitData));
         }
         
-        EventCenter.Instance.Subscribe<EgoArgs>("gainEgo", GainEgo);
+        EventCenter.Instance.Subscribe<EgoArgs>("GainEgo", GainEgo);
+        EventCenter.Instance.Subscribe<EgoArgs>("Remove", RemoveEgo);
     }
 
+    /// <summary>
+    /// 获取指定单位Ego条
+    /// </summary>
+    /// <param name="name">单位名称</param>
+    /// <returns>单位Ego条</returns>
+    public List<Ego> GetUnitEgo(string name)
+    {
+        return UnitEgoContainers[name].UnitEgo;
+    }
     /// <summary>
     /// 使目标Ego容器获取Ego
     /// </summary>

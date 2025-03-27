@@ -16,8 +16,14 @@ public class Singleton<T> where T : Singleton<T>, new()
             if (_instance == null)
             {
                 _instance = new T();
+                _instance.Init();
             }
             return _instance;
         }
+    }
+
+    protected virtual void Init()
+    {
+
     }
 }

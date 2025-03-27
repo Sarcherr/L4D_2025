@@ -5,9 +5,20 @@ using UnityEngine;
 
 /// <summary>
 /// 攻击组件
+/// <para>执行单位一切伤害性的主动行为</para>
 /// </summary>
 public class Attackable
 {
+    /// <summary>
+    /// 组件所属控制器
+    /// </summary>
+    public IController Controller;
+
+    public Attackable(IController controller)
+    {
+        Controller = controller;
+    }
+
     /// <summary>
     /// 发动攻击
     /// </summary>

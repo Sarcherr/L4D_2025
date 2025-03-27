@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 攻击管理器
+/// <para>处理Attackable组件发送的攻击请求</para>
+/// </summary>
 public class AttackManager : Singleton<AttackManager>
 {
     /// <summary>

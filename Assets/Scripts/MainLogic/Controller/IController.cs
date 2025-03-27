@@ -9,6 +9,5 @@ public interface IController
     public UnitData CurrentUnit { get; set; }
     public void Init();
     public void SwitchUnit(string unitName);
-    public void Attack();
-    public void Skill();
+    public void Power();
 }
