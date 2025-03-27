@@ -5,6 +5,5 @@ using UnityEngine;
 public interface IGameEntry
 {
     public void Init();
-    public void LoadUnitData();
-    public void LoadGameData();
+    public void LoadData();
 }

@@ -4,13 +4,5 @@ using UnityEngine;
 
 public class CharacterData : UnitData
 {
-    public List<CharacterSkill> characterSkills;
-}
-
-/// <summary>
-/// 技能释放时会
-/// </summary>
-public enum CharacterSkill
-{
-
+    public List<string> CharacterPowers;
 }

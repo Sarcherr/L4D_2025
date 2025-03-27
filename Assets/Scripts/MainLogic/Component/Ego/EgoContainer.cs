@@ -20,7 +20,7 @@ public class EgoContainer
     /// <summary>
     /// 单位Ego列表
     /// </summary>
-    public List<Ego> UnitEgo {  get; private set; }
+    public List<Ego> UnitEgo { get; private set; }
 
     public EgoContainer(UnitData unitData)
     {
@@ -50,16 +50,28 @@ public class EgoContainer
             UnitEgo.Add(ego);
         }
     }
+
+    /// <summary>
+    /// 移除所有Ego
+    /// </summary>
+    /// <returns>本次移除的Ego列表</returns>
+    public List<Ego> RemoveAllEgo()
+    {
+        List<Ego> removedEgos = new(UnitEgo);
+        UnitEgo.Clear();
+
+        return removedEgos;
+    }
     /// <summary>
     /// 移除Ego
-    /// <para>自由选择；在选中方法确定ID后才进行操作，故不做可行性判断</para>
+    /// <para>自由选择；在选中方法确定ID后才进行操作</para>
     /// </summary>
-    /// <param name="removeCount">待移除Ego编号</param>
+    /// <param name="removeID">待移除Ego编号</param>
     /// <returns>本次移除的Ego列表</returns>
-    public List<Ego> RemoveEgo(List<int> removeCount)
+    public List<Ego> RemoveEgo(List<int> removeID)
     {
         List<Ego> removedEgos = new();
-        foreach(var num in removeCount)
+        foreach(var num in removeID)
         {
             if(UnitEgo.Count == EgoThreshold)
             {
@@ -72,27 +84,67 @@ public class EgoContainer
     }
     /// <summary>
     /// 移除Ego
-    /// <para>指定数量从Ego条尾部顺序移除</para>
+    /// <para>指定数量从Ego条尾部/头部顺序移除</para>
     /// </summary>
-    /// <param name="removeNum">待移除Ego数量</param>
+    /// <param name="removeCount">待移除Ego数量</param>
+    /// <param name="beginFromEnd">是否从尾部开始</param>
     /// <param name="removeEgos">被移除的Ego列表</param>
-    /// <returns></returns>
-    public bool RemoveEgo(int removeNum, out List<Ego> removeEgos)
+    /// <returns>是否成功移除(待移除数量是否超过当前数量)</returns>
+    public bool RemoveEgo(int removeCount, bool beginFromEnd, out List<Ego> removeEgos)
     {
         removeEgos = new();
 
-        if(UnitEgo.Count >= removeNum)
+        if(UnitEgo.Count >= removeCount)
         {
-            for(int i = 0; i < removeNum; i++)
+            if(beginFromEnd)
             {
-                removeEgos.Add(UnitEgo[UnitEgo.Count - 1]);
-                UnitEgo.RemoveAt(UnitEgo.Count - 1);
+                for (int i = 0; i < removeCount; i++)
+                {
+                    removeEgos.Add(UnitEgo[UnitEgo.Count - 1]);
+                    UnitEgo.RemoveAt(UnitEgo.Count - 1);
+                }
             }
+            else
+            {
+                for (int i = 0; i < removeCount; i++)
+                {
+                    removeEgos.Add(UnitEgo[i]);
+                    UnitEgo.RemoveAt(i);
+                }
+            }
+
             return true;
         }
 
         return false;
     }
+
+    /// <summary>
+    /// 转变所有Ego
+    /// </summary>
+    /// <param name="targetType"></param>
+    public void TransformAllEgo(Ego targetEgo)
+    {
+        for(int i = 0; i < UnitEgo.Count; i++)
+        {
+            UnitEgo[i] = targetEgo;
+        }
+    }
+    /// <summary>
+    /// 转变Ego
+    /// <para>自由选择；在选中方法确定ID后才进行操作</para>
+    /// </summary>
+    /// <param name="transformIDs">待转变Ego编号</param>
+    /// <param name="targetEgo">目标类型</param>
+    public void TransformEgo(List<int> transformIDs, Ego targetEgo)
+    {
+        foreach (int i in transformIDs)
+        {
+            UnitEgo[i] = targetEgo;
+        }
+    }
+    
+
     /// <summary>
     /// Ego超出阈值(情感爆发)
     /// </summary>

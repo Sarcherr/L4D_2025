@@ -6,15 +6,11 @@ public class GameEntry : IGameEntry
 {
     public void Init()
     {
-        LoadGameData();
-        LoadUnitData();     
+        LoadData();     
     }
-    public void LoadUnitData()
+    public void LoadData()
     {
-        Debug.Log("LoadUnitData");
-    }
-    public void LoadGameData()
-    {
-        Debug.Log("LoadGameData");
+        Debug.Log("LoadData");
+        GlobalData.Init();
     }
 }
