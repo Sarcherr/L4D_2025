@@ -5,8 +5,10 @@ using UnityEngine;
 
 public interface IController
 {
-    public Dictionary<string, UnitData> Units { get; set; }
-    public UnitData CurrentUnit { get; set; }
+    public Dictionary<string, RuntimeUnitData> Units { get; set; }
+    public RuntimeUnitData CurrentUnit { get; set; }
+    public Powerable Powerable { get; set; }
+    public EgoMachine EgoMachine { get; set; }
     public void Init();
     public void SwitchUnit(string unitName);
     public void Power();

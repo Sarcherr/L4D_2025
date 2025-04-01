@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,13 +13,28 @@ public class AttackManager : Singleton<AttackManager>
     /// 随机数生成器
     /// </summary>
     public System.Random Random = new();
+    /// <summary>
+    /// 攻击行为执行者
+    /// </summary>
+    public AttackExecutor Executor = new();
+    public AttackRequest CurrentRequest;
+
+    /// <summary>
+    /// 处理攻击请求
+    /// </summary>
+    /// <param name="request"></param>
+    public void HandleRequest(AttackRequest request)
+    {
+
+    }
+
 
     /// <summary>
     /// 检查是否命中
     /// </summary>
     /// <param name="originHitChance">发动攻击单位命中率</param>
     /// <param name="targetDogeChance">受击单位闪避率</param>
-    /// <returns></returns>
+    /// <returns>是否命中</returns>
     public bool CheckHit(float originHitChance, float targetDogeChance)
     {
         return Random.NextDouble() < (originHitChance * (1 - targetDogeChance));
@@ -28,7 +44,7 @@ public class AttackManager : Singleton<AttackManager>
     /// 检查是否暴击
     /// </summary>
     /// <param name="originCritChance">发动攻击单位暴击率</param>
-    /// <returns></returns>
+    /// <returns>是否暴击</returns>
     public bool CheckCrit(float originCritChance)
     {
         return Random.NextDouble() < originCritChance;
@@ -39,9 +55,40 @@ public class AttackManager : Singleton<AttackManager>
     /// </summary>
     /// <param name="originDotRate">发动攻击单位施加dot概率</param>
     /// <param name="targetResistanceRate">受击单位抵抗率</param>
-    /// <returns></returns>
+    /// <returns>是否抵抗</returns>
     public bool CheckResistance(float originDotRate, float targetResistanceRate)
     {
         return Random.NextDouble() < (originDotRate * (1 - targetResistanceRate));
     }
+}
+
+/// <summary>
+/// 攻击行为执行者
+/// </summary>
+public class AttackExecutor
+{
+    public Dictionary<string, Action<AttackRequest>> AttackActions = new();
+
+    public AttackExecutor()
+    {
+        // todo:初始化注册所有攻击行为对应的方法
+        // ps. 方法格式统一为void MethodName(AttackRequest request)
+    }
+
+    /// <summary>
+    /// 执行攻击
+    /// </summary>
+    /// <param name="name">方法索引名称(与能力名称一致)</param>
+    public void ExecuteAttack(string name)
+    {
+        if (AttackActions.TryGetValue(name, out var action))
+        {
+            action.Invoke(AttackManager.Instance.CurrentRequest);
+        }
+    }
+}
+
+public struct Attack
+{
+    
 }

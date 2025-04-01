@@ -18,11 +18,11 @@ public class EgoContainer
     /// </summary>
     public int EgoThreshold { get; private set; }
     /// <summary>
-    /// 单位Ego列表
+    /// 单位Ego列表(Ego数量同时为单位先攻值)
     /// </summary>
     public List<Ego> UnitEgo { get; private set; }
 
-    public EgoContainer(UnitData unitData)
+    public EgoContainer(RuntimeUnitData unitData)
     {
         BelongName = unitData.Name;
         EgoLimit = unitData.EgoLimit;
@@ -44,7 +44,7 @@ public class EgoContainer
             }
             else if(egoList.Count == EgoLimit)
             {
-                OnEgoOutOfLimit();
+                OnEgoOutOfControl();
                 break;
             }
             UnitEgo.Add(ego);
@@ -155,7 +155,7 @@ public class EgoContainer
     /// <summary>
     /// Ego溢出上限(失控)
     /// </summary>
-    public void OnEgoOutOfLimit()
+    public void OnEgoOutOfControl()
     {
 
     }

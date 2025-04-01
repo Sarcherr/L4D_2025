@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IController
+public class EnemyController : MonoBehaviour, IController
 {
-    public Dictionary<string, UnitData> Units { get; set; }
-    public UnitData CurrentUnit { get; set; }
+    public Dictionary<string, RuntimeUnitData> Units { get; set; }
+    public RuntimeUnitData CurrentUnit { get; set; }
     public Powerable Powerable { get; set; }
-    public Attackable Attackable { get; set; }
-    public Skillable Skillable { get; set; }
     public EgoMachine EgoMachine { get; set; }
 
     public void Init()
