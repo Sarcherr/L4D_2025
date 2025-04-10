@@ -5,8 +5,9 @@ using UnityEngine;
 
 public interface IController
 {
+    public string CotrollerKind { get; set; }
     public Dictionary<string, RuntimeUnitData> Units { get; set; }
-    public RuntimeUnitData CurrentUnit { get; set; }
+    public string CurrentUnit { get; set; }
     public Powerable Powerable { get; set; }
     public EgoMachine EgoMachine { get; set; }
     public void Init();

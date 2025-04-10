@@ -28,11 +28,11 @@ public class ControllerManager : Singleton<ControllerManager>
     /// <param name="controller">待注册控制器</param>
     public void RegisterController(IController controller)
     {
-        if (controller is PlayerController)
+        if (controller.CotrollerKind == "Player")
         {
             Player = controller;
         }
-        else if (controller is EnemyController)
+        else if (controller.CotrollerKind == "Enemy")
         {
             Enemy = controller;
         }
