@@ -7,8 +7,6 @@ using UnityEngine;
 /// </summary>
 public class PowerManager : Singleton<PowerManager>
 {
-
-
     protected override void Init()
     {
 
@@ -26,7 +24,7 @@ public class PowerManager : Singleton<PowerManager>
     /// <summary>
     /// 接收UI输入结果，生成能力
     /// </summary>
-    public void GeneratePower()
+    public void GeneratePower(UIPowerMessage message)
     {
         // todo:生成能力
         // todo:生成攻击与技能请求，发送给AttackManager与SkillManager
@@ -62,6 +60,10 @@ public struct AttackRequest
     /// </summary>
     public string Name;
     /// <summary>
+    /// 单位种类
+    /// </summary>
+    public string UnitKind;
+    /// <summary>
     /// 攻击者
     /// </summary>
     public string Origin;
@@ -85,6 +87,10 @@ public struct SkillRequest
     /// 名称
     /// </summary>
     public string Name;
+    /// <summary>
+    /// 单位种类
+    /// </summary>
+    public string UnitKind;
     /// <summary>
     /// 技能发起者
     /// </summary>

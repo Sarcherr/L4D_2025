@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// 攻击管理器
-/// <para>处理Attackable组件发送的攻击请求</para>
+/// <para>处理PowerManager发送的攻击请求</para>
 /// </summary>
 public class AttackManager : Singleton<AttackManager>
 {
@@ -17,7 +17,6 @@ public class AttackManager : Singleton<AttackManager>
     /// 攻击行为执行者
     /// </summary>
     public AttackExecutor Executor = new();
-    public AttackRequest CurrentRequest;
 
     /// <summary>
     /// 处理攻击请求
@@ -76,14 +75,14 @@ public class AttackExecutor
     }
 
     /// <summary>
-    /// 执行攻击
+    /// 执行攻击行为
     /// </summary>
-    /// <param name="name">方法索引名称(与能力名称一致)</param>
-    public void ExecuteAttack(string name)
+    /// <param name="request">当前攻击请求</param>
+    public void ExecuteAttack(AttackRequest request)
     {
-        if (AttackActions.TryGetValue(name, out var action))
+        if (AttackActions.TryGetValue(request.Name, out var action))
         {
-            action.Invoke(AttackManager.Instance.CurrentRequest);
+            action.Invoke(request);
         }
     }
 }

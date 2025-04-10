@@ -11,10 +11,10 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// 回合序列(使用单位名称排序，总体回合结束以字符串"End"为标志)
     /// <para>该序列为当前实际回合序列，作为CurrentQueue每次刷新的依据</para>
     /// </summary>
-    public List<Turn> TurnQueue { get; set; }
+    public List<Turn> BaseTurnQueue { get; set; }
     /// <summary>
     /// 当前回合序列，用于实时操作
-    /// <para>发生变更时只会更改当前回合之后的部分，在该总体回合结束后刷新为TurnQueue的序列</para>
+    /// <para>发生变更时只会更改当前回合之后的部分，在该总体回合结束后刷新为BaseTurnQueue的序列</para>
     /// </summary>
     public List<Turn> CurrentTurnQueue { get; set; }
     /// <summary>
@@ -28,7 +28,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
 
     protected override void Init()
     {
-        TurnQueue = new List<Turn>();
+        BaseTurnQueue = new List<Turn>();
         CurrentTurnQueue = new List<Turn>();     
         RefreshQueue();
         CurrentTurn = CurrentTurnQueue[0];
@@ -44,52 +44,64 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         // 以EgoContainer中Ego数量为依据对回合序列进行排序
         foreach (var pair in ControllerManager.Instance.AllEgoContainers)
         {
-            if (ControllerManager.Instance.AllUnitData[pair.Value.BelongName].CurrentHealth > 0)
+            // 插入回合对应单位数据
+            var data = ControllerManager.Instance.AllUnitData[pair.Value.BelongName];
+            Turn turn2Add = new Turn()
             {
-                if (TurnQueue.Count == 0)
+                Name = pair.Value.BelongName,
+                UnitKind = data.UnitKind,
+                IsExtraTurn = false,
+                EgoValue = pair.Value.UnitEgo.Count
+            };
+
+            if (data.CurrentHealth > 0)
+            {
+                if (BaseTurnQueue.Count == 0)
                 {
-                    TurnQueue.Add(new Turn() { Name = pair.Value.BelongName, IsExtraTurn = false });
+                    BaseTurnQueue.Add(turn2Add);
                 }
                 else
                 {
-                    for (int i = 0; i < TurnQueue.Count; i++)
+                    for (int i = 0; i > BaseTurnQueue.Count; i++)
                     {
-                        if (pair.Value.UnitEgo.Count > ControllerManager.Instance.AllEgoContainers[TurnQueue[i].Name].UnitEgo.Count)
+                        if (pair.Value.UnitEgo.Count < BaseTurnQueue[i].EgoValue)
                         {
-                            TurnQueue.Insert(i, new Turn() { Name = pair.Value.BelongName, IsExtraTurn = false });
+                            BaseTurnQueue.Insert(i, turn2Add);
                             break;
                         }
-                        else if (i == TurnQueue.Count - 1)
+                        else if (i == BaseTurnQueue.Count - 1)
                         {
-                            TurnQueue.Add(new Turn() { Name = pair.Value.BelongName, IsExtraTurn = false });
+                            BaseTurnQueue.Add(turn2Add);
                             break;
                         }
                     }
                 }
             }
-            TurnQueue.Add(new Turn() { Name = "End", IsExtraTurn = false });
+        }
 
-            for (int i = 0; i < TurnQueue.Count; i++)
-            {
-                var turn = TurnQueue[i];
-                turn.TurnIndex = i;
-                TurnQueue[i] = turn;
-                CurrentTurnQueue.Add(TurnQueue[i]);
-            }
+        BaseTurnQueue.Add(new Turn() { Name = "End", IsExtraTurn = false });
+
+        for (int i = 0; i < BaseTurnQueue.Count; i++)
+        {
+            var turn = BaseTurnQueue[i];
+            turn.TurnIndex = i;
+            BaseTurnQueue[i] = turn;
+            CurrentTurnQueue.Add(BaseTurnQueue[i]);
         }
     }
     /// <summary>
-    /// 添加回合
+    /// 添加回合(目前只用于添加额外回合)
     /// </summary>
     /// <param name="turn"></param>
     public void AddToQueue(Turn turn)
     {
         // 添加额外回合时直接插入到当前回合之后，且只对CurrentTurnQueue进行操作
-        // 否则按该回合名称对应的单位Ego数量插入到合适位置(同时更新CurrentTurnQueue和TurnQueue)
+        // 否则按该回合名称对应的单位Ego数量插入到合适位置(同时更新CurrentTurnQueue和BaseTurnQueue)
         if (turn.IsExtraTurn)
         {
             // 额外回合索引与当前回合一致
             turn.TurnIndex = CurrentTurn.TurnIndex;
+            turn.UnitKind = CurrentTurn.UnitKind;
             CurrentTurnQueue.Insert(CurrentTurn.TurnIndex + 1, turn);
         }
         else
@@ -99,15 +111,147 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             // 注意插入后在当前回合之后的回合索引需要更新
         }
     }
-
-    public void RemoveFromQueue(Turn turn)
+    /// <summary>
+    /// 从回合序列中移除
+    /// </summary>
+    /// <param name="name">单位名称</param>
+    public void RemoveFromQueue(string name)
     {
-
+        CurrentTurnQueue.RemoveAll(t => t.Name == name);
+        BaseTurnQueue.RemoveAll(t => t.Name == name);
+        //for (int i = 0; i < CurrentTurnQueue.Count; i++)
+        //{
+        //    if (CurrentTurnQueue[i].Name == name)
+        //    {
+        //        CurrentTurnQueue.RemoveAt(i);
+        //        break;
+        //    }
+        //}
+        //for (int i = 0; i < TurnQueue.Count; i++)
+        //{
+        //    if (TurnQueue[i].Name == name)
+        //    {
+        //        TurnQueue.RemoveAt(i);
+        //        break;
+        //    }
+        //}
     }
+    /// <summary>
+    /// 更新回合(用于Ego数量改变时更新回合序列)
+    /// </summary>
+    /// <param name="name">单位名称</param>
+    public void UpdateTurn(string name)
+    {
+        List<(Turn turn, int index)> turnPairs = new();
 
+        for (int i = 0; i < CurrentTurnQueue.Count; i++)
+        {
+            if (CurrentTurnQueue[i].Name == name)
+            {
+                var turn = CurrentTurnQueue[i];
+                turn.EgoValue = ControllerManager.Instance.AllEgoContainers[name].UnitEgo.Count;
+                CurrentTurnQueue[i] = turn;
+                turnPairs.Add((turn, i));
+            }
+        }
+
+        MoveTurn(turnPairs, "current");
+        turnPairs.Clear();
+
+        for (int i = 0; i < BaseTurnQueue.Count; i++)
+        {
+            if (BaseTurnQueue[i].Name == name)
+            {
+                var turn = BaseTurnQueue[i];
+                turn.EgoValue = ControllerManager.Instance.AllEgoContainers[name].UnitEgo.Count;
+                BaseTurnQueue[i] = turn;
+                turnPairs.Add((turn, i));
+            }
+        }
+
+        MoveTurn(turnPairs, "base");
+    }
+    /// <summary>
+    /// 移动回合
+    /// <para>同时向UI发送信息</para>
+    /// </summary>
+    /// <param name="turnPairs">回合信息</param>
+    /// <param name="targetQueue">目标回合序列</param>
+    private void MoveTurn(List<(Turn turn, int index)> turnPairs, string targetQueue)
+    {
+        // 在待移动单位回合晚于CurrentTurn时，才移动其在CurrentTurnQueue中的位置
+        if(targetQueue == "current")
+        {
+            foreach (var (turn, index) in turnPairs)
+            {
+                if (turn.TurnIndex > CurrentTurn.TurnIndex)
+                {
+                    CurrentTurnQueue.RemoveAt(index);
+                    for (int i = 0; i < CurrentTurnQueue.Count; i++)
+                    {
+                        if (turn.EgoValue > CurrentTurnQueue[i].EgoValue)
+                        {
+                            CurrentTurnQueue.Insert(i, turn);
+                            // todo: 向UI发送信息
+                            break;
+                        }
+                        else if (i == CurrentTurnQueue.Count - 1)
+                        {
+                            CurrentTurnQueue.Add(turn);
+                            // todo: 向UI发送信息
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if (targetQueue == "base")
+        {
+            foreach (var (turn, index) in turnPairs)
+            {
+                if(!turn.IsExtraTurn)
+                {
+                    BaseTurnQueue.RemoveAt(index);
+                    for (int i = 0; i < BaseTurnQueue.Count; i++)
+                    {
+                        if (turn.EgoValue > BaseTurnQueue[i].EgoValue)
+                        {
+                            BaseTurnQueue.Insert(i, turn);
+                            // todo: 向UI发送信息
+                            break;
+                        }
+                        else if (i == BaseTurnQueue.Count - 1)
+                        {
+                            BaseTurnQueue.Add(turn);
+                            // todo: 向UI发送信息
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// 进入下一回合
+    /// </summary>
     public void NextTurn()
     {
+        CurrentTurn = CurrentTurnQueue[CurrentTurn.TurnIndex + 1];
 
+        if (CurrentTurn.Name == "End")
+        {
+            CurrentGeneralTurn++;
+            CurrentTurnQueue = new List<Turn>(BaseTurnQueue);
+            CurrentTurn = CurrentTurnQueue[0];
+        }
+        else if (ControllerManager.Instance.AllUnitData[CurrentTurn.Name].UnitKind == "Player")
+        {
+            ControllerManager.Instance.Player.SwitchUnit(CurrentTurn.Name);
+        }
+        else
+        {
+            ControllerManager.Instance.Enemy.SwitchUnit(CurrentTurn.Name);
+        }
     }
 
     public void OnTurnStart()
@@ -131,9 +275,17 @@ public struct Turn
     /// </summary>
     public string Name;
     /// <summary>
+    /// 单位阵营
+    /// </summary>
+    public string UnitKind;
+    /// <summary>
     /// 是否为额外回合
     /// </summary>
     public bool IsExtraTurn;
+    /// <summary>
+    /// 回合对应单位先攻值
+    /// </summary>
+    public int EgoValue;
     /// <summary>
     /// 回合序号
     /// </summary>

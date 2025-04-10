@@ -4,9 +4,13 @@ using System;
 public class EgoMachine
 {
     /// <summary>
-    /// 攻击组件所属控制器
+    /// 组件所属控制器
     /// </summary>
     public IController Controller;
+    /// <summary>
+    /// Ego特效执行器
+    /// </summary>
+    public EgoExecutor EgoExecutor = new();
     /// <summary>
     /// 所属全部单位的Ego条容器
     /// </summary>
@@ -67,6 +71,36 @@ public class EgoMachine
         }
     }
     // todo:移除的具体方案待完善
+
+    /// <summary>
+    /// 触发Ego特效
+    /// </summary>
+    public void TriggerEgo(string name, Ego ego)
+    {
+        EgoExecutor.ExecuteEgo(name, ego);
+    }
+}
+
+/// <summary>
+/// Ego特效执行器
+/// </summary>
+public class EgoExecutor
+{
+    public Dictionary<string, Action<Ego>> EgoActions = new();
+
+    public EgoExecutor()
+    {
+        // todo:初始化注册所有Ego行为对应的方法
+        // ps. 方法格式统一为void MethodName(Ego ego)
+    }
+
+    public void ExecuteEgo(string name, Ego ego)
+    {
+        if (EgoActions.TryGetValue(name, out var action))
+        {
+            action(ego);
+        }
+    }
 }
 
 /// <summary>
