@@ -15,7 +15,8 @@ namespace UI
         /// Ego槽容纳Ego
         /// </summary>
         public Ego ItemEgo { get; private set; }
-
         
+        // todo: Ego槽的刷新
+        // todo: Ego槽的特定规则选取
     }
 }

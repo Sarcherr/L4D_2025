@@ -9,7 +9,7 @@ public struct PowerData
     /// </summary>
     public string name;
     /// <summary>
-    /// 使用次数上限
+    /// 使用次数上限(0为无上限)
     /// </summary>
     public int limit;
     ///// <summary>

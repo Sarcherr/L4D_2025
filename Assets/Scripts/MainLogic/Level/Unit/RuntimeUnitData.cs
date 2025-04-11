@@ -27,7 +27,7 @@ public struct RuntimeUnitData
     /// <summary>
     /// 能力使用次数记录
     /// </summary>
-    public Dictionary<PowerData, int> PowerRecord;
+    public List<(PowerData, int)> PowerRecord;
     /// <summary>
     /// 是否处于情感爆发状态
     /// </summary>
