@@ -24,9 +24,8 @@ public class AttackManager : Singleton<AttackManager>
     /// <param name="request"></param>
     public void HandleRequest(AttackRequest request)
     {
-
+        Executor.ExecuteAttack(request);
     }
-
 
     /// <summary>
     /// 检查是否命中
@@ -85,9 +84,4 @@ public class AttackExecutor
             action.Invoke(request);
         }
     }
-}
-
-public struct Attack
-{
-    
 }

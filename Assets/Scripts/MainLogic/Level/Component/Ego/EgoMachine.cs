@@ -20,11 +20,11 @@ public class EgoMachine
     {
         foreach (var unitData in controller.Units.Values)
         {
-            UnitEgoContainers.Add(unitData.Name, new(unitData));
+            UnitEgoContainers.Add(unitData.Name, new(unitData, this));
         }
         
-        EventCenter.Instance.Subscribe<EgoArgs>("GainEgo", GainEgo);
-        EventCenter.Instance.Subscribe<EgoArgs>("Remove", RemoveEgo);
+        //EventCenter.Instance.Subscribe<EgoArgs>("GainEgo", GainEgo);
+        //EventCenter.Instance.Subscribe<EgoArgs>("Remove", RemoveEgo);
     }
 
     /// <summary>
@@ -75,9 +75,11 @@ public class EgoMachine
     /// <summary>
     /// 触发Ego特效
     /// </summary>
-    public void TriggerEgo(string name, Ego ego)
+    /// <param name="ego">对应Ego</param>
+    /// <param name="triggerType">触发类型(爆发Burst/失控OutOfControl)</param>
+    public void TriggerEgo(Ego ego, string triggerType)
     {
-        EgoExecutor.ExecuteEgo(name, ego);
+        EgoExecutor.ExecuteEgo(ego, triggerType);
     }
 }
 
@@ -86,21 +88,23 @@ public class EgoMachine
 /// </summary>
 public class EgoExecutor
 {
-    public Dictionary<string, Action<Ego>> EgoActions = new();
+    public Dictionary<string, Action<Ego, string>> EgoActions = new();
 
     public EgoExecutor()
     {
         // todo:初始化注册所有Ego行为对应的方法
-        // ps. 方法格式统一为void MethodName(Ego ego)
+        // ps. 方法格式统一为void MethodName(Ego ego, string triggerType)
     }
 
-    public void ExecuteEgo(string name, Ego ego)
+    public void ExecuteEgo(Ego ego, string triggerType)
     {
-        if (EgoActions.TryGetValue(name, out var action))
+        if (EgoActions.TryGetValue(ego.EgoType, out var action))
         {
-            action(ego);
+            action.Invoke(ego, triggerType);
         }
     }
+
+
 }
 
 /// <summary>

@@ -12,5 +12,5 @@ public interface IController
     public EgoMachine EgoMachine { get; set; }
     public void Init();
     public void SwitchUnit(string unitName);
-    public void Power();
+    public void Power(string power);
 }

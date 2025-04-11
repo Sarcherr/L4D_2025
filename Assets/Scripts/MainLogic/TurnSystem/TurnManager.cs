@@ -7,13 +7,14 @@ using UnityEngine;
 /// </summary>
 public class TurnManager : Singleton<TurnManager>, ITurnManager
 {
+    // 所有回合序列均按单位Ego数量从大到小降序排列
     /// <summary>
     /// 回合序列(使用单位名称排序，总体回合结束以字符串"End"为标志)
     /// <para>该序列为当前实际回合序列，作为CurrentQueue每次刷新的依据</para>
     /// </summary>
     public List<Turn> BaseTurnQueue { get; set; }
     /// <summary>
-    /// 当前回合序列，用于实时操作
+    /// 当前回合序列，用于实时操作(使用单位名称排序，总体回合结束以字符串"End"为标志)
     /// <para>发生变更时只会更改当前回合之后的部分，在该总体回合结束后刷新为BaseTurnQueue的序列</para>
     /// </summary>
     public List<Turn> CurrentTurnQueue { get; set; }
@@ -64,7 +65,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
                 {
                     for (int i = 0; i > BaseTurnQueue.Count; i++)
                     {
-                        if (pair.Value.UnitEgo.Count < BaseTurnQueue[i].EgoValue)
+                        if (pair.Value.UnitEgo.Count > BaseTurnQueue[i].EgoValue)
                         {
                             BaseTurnQueue.Insert(i, turn2Add);
                             break;
@@ -84,7 +85,6 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         for (int i = 0; i < BaseTurnQueue.Count; i++)
         {
             var turn = BaseTurnQueue[i];
-            turn.TurnIndex = i;
             BaseTurnQueue[i] = turn;
             CurrentTurnQueue.Add(BaseTurnQueue[i]);
         }
@@ -99,10 +99,16 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         // 否则按该回合名称对应的单位Ego数量插入到合适位置(同时更新CurrentTurnQueue和BaseTurnQueue)
         if (turn.IsExtraTurn)
         {
-            // 额外回合索引与当前回合一致
-            turn.TurnIndex = CurrentTurn.TurnIndex;
             turn.UnitKind = CurrentTurn.UnitKind;
-            CurrentTurnQueue.Insert(CurrentTurn.TurnIndex + 1, turn);
+            // 插入到当前回合后
+            for (int i = 0; i < CurrentTurnQueue.Count; i++)
+            {
+                if (CurrentTurnQueue[i].Name == CurrentTurn.Name)
+                {
+                    CurrentTurnQueue.Insert(i + 1, turn);
+                    break;
+                }
+            }
         }
         else
         {
@@ -179,28 +185,24 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// <param name="targetQueue">目标回合序列</param>
     private void MoveTurn(List<(Turn turn, int index)> turnPairs, string targetQueue)
     {
-        // 在待移动单位回合晚于CurrentTurn时，才移动其在CurrentTurnQueue中的位置
         if(targetQueue == "current")
         {
             foreach (var (turn, index) in turnPairs)
             {
-                if (turn.TurnIndex > CurrentTurn.TurnIndex)
+                CurrentTurnQueue.RemoveAt(index);
+                for (int i = 0; i < CurrentTurnQueue.Count; i++)
                 {
-                    CurrentTurnQueue.RemoveAt(index);
-                    for (int i = 0; i < CurrentTurnQueue.Count; i++)
+                    if (turn.EgoValue > CurrentTurnQueue[i].EgoValue)
                     {
-                        if (turn.EgoValue > CurrentTurnQueue[i].EgoValue)
-                        {
-                            CurrentTurnQueue.Insert(i, turn);
-                            // todo: 向UI发送信息
-                            break;
-                        }
-                        else if (i == CurrentTurnQueue.Count - 1)
-                        {
-                            CurrentTurnQueue.Add(turn);
-                            // todo: 向UI发送信息
-                            break;
-                        }
+                        CurrentTurnQueue.Insert(i, turn);
+                        // todo: 向UI发送信息
+                        break;
+                    }
+                    else if (i == CurrentTurnQueue.Count - 1)
+                    {
+                        CurrentTurnQueue.Add(turn);
+                        // todo: 向UI发送信息
+                        break;
                     }
                 }
             }
@@ -236,7 +238,11 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// </summary>
     public void NextTurn()
     {
-        CurrentTurn = CurrentTurnQueue[CurrentTurn.TurnIndex + 1];
+        // todo: 向UI发送信息,回合序列左移一格
+        // 将旧的CurrentTurn从CurrentTurnQueue中移除
+        // CurrentTurn取CurrentTurnQueue中的下一个回合
+        CurrentTurnQueue.RemoveAt(0);
+        CurrentTurn = CurrentTurnQueue[0];
 
         if (CurrentTurn.Name == "End")
         {
@@ -286,8 +292,4 @@ public struct Turn
     /// 回合对应单位先攻值
     /// </summary>
     public int EgoValue;
-    /// <summary>
-    /// 回合序号
-    /// </summary>
-    public int TurnIndex;
 }

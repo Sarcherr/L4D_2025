@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,7 @@ using UnityEngine;
 
 public class EgoContainer
 {
+    public EgoMachine EgoMachine { get; private set; }
     /// <summary>
     /// 容器所属单位名称
     /// </summary>
@@ -22,8 +24,9 @@ public class EgoContainer
     /// </summary>
     public List<Ego> UnitEgo { get; private set; }
 
-    public EgoContainer(RuntimeUnitData unitData)
+    public EgoContainer(RuntimeUnitData unitData, EgoMachine egoMachine)
     {
+        EgoMachine = egoMachine;
         BelongName = unitData.Name;
         EgoLimit = unitData.EgoLimit;
         EgoThreshold = unitData.EgoThreshold;
@@ -122,7 +125,7 @@ public class EgoContainer
     /// <summary>
     /// 转变所有Ego
     /// </summary>
-    /// <param name="targetType"></param>
+    /// <param name="targetEgo"></param>
     public void TransformAllEgo(Ego targetEgo)
     {
         for(int i = 0; i < UnitEgo.Count; i++)
@@ -150,20 +153,33 @@ public class EgoContainer
     /// </summary>
     public void OnEgoBurst()
     {
-
+        foreach(var ego in UnitEgo)
+        {
+            EgoMachine.TriggerEgo(ego, "Burst");
+        }
     }
     /// <summary>
     /// Ego溢出上限(失控)
     /// </summary>
     public void OnEgoOutOfControl()
     {
-
+        foreach (var ego in UnitEgo)
+        {
+            EgoMachine.TriggerEgo(ego, "OutOfControl");
+        }
     }
     /// <summary>
     /// Ego低于阈值
     /// </summary>
     public void OnEgoBelowThreshold()
     {
-
+        // todo: BuffMachine移除相关buff
+    }
+    /// <summary>
+    /// Ego失控结束
+    /// </summary>
+    public void OnEgoOutOfControlEnd()
+    {
+        // todo: BuffMachine移除相关buff
     }
 }

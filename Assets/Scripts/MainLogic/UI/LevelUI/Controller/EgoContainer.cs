@@ -23,5 +23,8 @@ namespace UI
         /// Ego单元槽
         /// </summary>
         public EgoItem EgoItemPrefab;
+
+        // todo: Ego槽的刷新
+        // todo: Ego槽的特定规则选取
     }
 }

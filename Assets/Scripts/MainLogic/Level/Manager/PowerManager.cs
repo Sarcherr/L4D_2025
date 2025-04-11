@@ -15,8 +15,8 @@ public class PowerManager : Singleton<PowerManager>
     /// <summary>
     /// 处理能力请求
     /// </summary>
-    /// <param name="powerData"></param>
-    public void HandleRequest(PowerRequest powerData)
+    /// <param name="powerRequest"></param>
+    public void HandleRequest(PowerRequest powerRequest)
     {
         // todo:向UI发送请求
     }
@@ -70,11 +70,7 @@ public struct AttackRequest
     /// <summary>
     /// 攻击目标
     /// </summary>
-    public string Target;
-    /// <summary>
-    /// 随机系数
-    /// </summary>
-    public (float min, float max) RandomCoefficient;
+    public List<string> Target;
     /// <summary>
     /// Ego消耗
     /// </summary>
@@ -98,11 +94,7 @@ public struct SkillRequest
     /// <summary>
     /// 技能目标
     /// </summary>
-    public string Target;
-    /// <summary>
-    /// 随机系数
-    /// </summary>
-    public (float min, float max) RandomCoefficient;
+    public List<string> Target;
     /// <summary>
     /// Ego消耗
     /// </summary>
