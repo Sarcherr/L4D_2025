@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Controller : MonoBehaviour, IController
+public class Controller : IController
 {
     /// <summary>
-    /// 控制器类型(Player/Enemy
+    /// 控制器类型(Player/Enemy)
     /// </summary>
     public string CotrollerKind { get; set; }
     /// <summary>
@@ -25,10 +25,18 @@ public class Controller : MonoBehaviour, IController
     /// </summary>
     public EgoMachine EgoMachine { get; set; }
 
-    public void Init()
+    public Controller(string controllerKind, List<RuntimeUnitData> runtimeUnitDatas)
     {
-
+        CotrollerKind = controllerKind;
+        Units = new Dictionary<string, RuntimeUnitData>();
+        foreach (var unitData in runtimeUnitDatas)
+        {
+            Units.Add(unitData.Name, unitData);
+        }
+        Powerable = new Powerable();
+        EgoMachine = new EgoMachine(this);
     }
+
     /// <summary>
     /// 切换当前行动单位
     /// </summary>
@@ -37,12 +45,15 @@ public class Controller : MonoBehaviour, IController
     {
         CurrentUnit = unitName;
     }
+
     /// <summary>
     /// 发动能力
     /// </summary>
     /// <param name="power">能力名称</param>
     public void Power(string power)
     {
+        Debug.Log($"Unit {CurrentUnit} use power {power}");
+
         PowerRequest request = new PowerRequest()
         {
             Name = power,
@@ -53,9 +64,17 @@ public class Controller : MonoBehaviour, IController
         PowerManager.Instance.HandleRequest(request);
     }
 
+    /// <summary>
+    /// 每个大回合Ego恢复
+    /// </summary>
+    public void RecoverEgo()
+    {
+        EgoMachine.RecoverEgo();
+    }
+
     public void OnTurnStart()
     {
-        // todo:Ego自恢复
+        
     }
 
     public void OnTurnEnd()

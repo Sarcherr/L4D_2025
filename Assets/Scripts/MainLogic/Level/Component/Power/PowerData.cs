@@ -5,6 +5,10 @@ using UnityEngine;
 public struct PowerData
 {
     /// <summary>
+    /// 所属单位名称
+    /// </summary>
+    public string belongName;
+    /// <summary>
     /// 能力名称
     /// </summary>
     public string name;

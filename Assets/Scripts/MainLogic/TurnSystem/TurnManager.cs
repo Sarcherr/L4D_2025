@@ -101,14 +101,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         {
             turn.UnitKind = CurrentTurn.UnitKind;
             // 插入到当前回合后
-            for (int i = 0; i < CurrentTurnQueue.Count; i++)
-            {
-                if (CurrentTurnQueue[i].Name == CurrentTurn.Name)
-                {
-                    CurrentTurnQueue.Insert(i + 1, turn);
-                    break;
-                }
-            }
+            CurrentTurnQueue.Insert(1, turn);
         }
         else
         {
@@ -281,7 +274,7 @@ public struct Turn
     /// </summary>
     public string Name;
     /// <summary>
-    /// 单位阵营
+    /// 单位阵营(Player/Enemy)
     /// </summary>
     public string UnitKind;
     /// <summary>
