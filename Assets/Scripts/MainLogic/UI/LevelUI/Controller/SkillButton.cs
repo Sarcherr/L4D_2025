@@ -31,7 +31,10 @@ namespace UI
         public void Power()
         {
             Debug.Log(SkillName);
-            ControllerManager.Instance.Player.Power(SkillName);
+            if(SkillName != "null")
+            {
+                ControllerManager.Instance.Player.Power(SkillName);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 运行时单位数据，用于关卡内单位的数据记录
 /// </summary>
-public struct RuntimeUnitData
+public class RuntimeUnitData
 {
     /// <summary>
     /// 单位种类(玩家Player/敌人Enemy)
@@ -23,6 +23,14 @@ public struct RuntimeUnitData
     /// Ego阈值(超过进入情感爆发状态)
     /// </summary>
     public int EgoThreshold;
+    /// <summary>
+    /// Ego初始值(仅针对敌人生效，玩家单位的Ego初始值为0)
+    /// </summary>
+    public int EgoStartValue;
+    /// <summary>
+    /// Ego大回合自然恢复值
+    /// </summary>
+    public int EgoRecoverValue;
 
     /// <summary>
     /// 能力使用次数记录
@@ -65,4 +73,37 @@ public struct RuntimeUnitData
     /// 当前抵抗率
     /// </summary>
     public float CurrentResistanceRate;
+    /// <summary>
+    /// 当前减伤率
+    /// </summary>
+    public float CurrentDamageReductionRate;
+
+    /// <summary>
+    /// 复制UnitData数据
+    /// </summary>
+    /// <param name="unitData"></param>
+    public void CopyData(UnitData unitData)
+    {
+        UnitKind = unitData.UnitKind;
+        Name = unitData.Name;
+        EgoLimit = unitData.EgoLimit;
+        EgoThreshold = unitData.EgoThreshold;
+        EgoStartValue = unitData.EgoStartValue;
+        EgoRecoverValue = unitData.EgoRecoverValue;
+        PowerRecord = new List<(PowerData, int)>();
+        foreach (var power in unitData.PowerList)
+        {
+            PowerRecord.Add((power, GlobalData.PowerDataDic[power.name].limit));
+        }
+        CurrentHealth = unitData.Health;
+        CurrentAttack = unitData.Attack;
+        CurrentHitChance = unitData.HitChance;
+        CurrentDogeChance = unitData.DogeChance;
+        CurrentCritChance = unitData.CritChance;
+        CurrentCritRate = unitData.CritRate;
+        CurrentResistanceRate = unitData.ResistanceRate;
+        CurrentDamageReductionRate = unitData.DamageReductionRate;
+        IsBurst = false;
+        IsOutOfControl = false;
+    }
 }

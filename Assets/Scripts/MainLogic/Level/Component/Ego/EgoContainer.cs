@@ -146,7 +146,50 @@ public class EgoContainer
             UnitEgo[i] = targetEgo;
         }
     }
-    
+
+    /// <summary>
+    /// 初始化时获得Ego(仅针对敌人)
+    /// </summary>
+    public void OnEgoInit()
+    {
+        List<Ego> recoverEgos = new();
+        for (int i = 0; i < GlobalData.RuntimeUnitDataDic[BelongName].EgoStartValue; i++)
+        {
+            if (UnitEgo.Count < EgoLimit)
+            {
+                recoverEgos.Add(new Ego()
+                {
+                    EgoType = "Normal",
+                    HostName = BelongName,
+                    CanConsume = true,
+                });
+            }
+        }
+
+        GainEgo(recoverEgos);
+    }
+
+    /// <summary>
+    /// 每个大回合开始时Ego恢复
+    /// </summary>
+    public void OnGeneralEgoRecover()
+    {
+        List<Ego> recoverEgos = new();
+        for (int i = 0; i < GlobalData.RuntimeUnitDataDic[BelongName].EgoRecoverValue; i++)
+        {
+            if (UnitEgo.Count < EgoLimit)
+            {
+                recoverEgos.Add(new Ego()
+                {
+                    EgoType = "Normal",
+                    HostName = BelongName,
+                    CanConsume = true,
+                });
+            }
+        }
+
+        GainEgo(recoverEgos);
+    }
 
     /// <summary>
     /// Ego超出阈值(情感爆发)

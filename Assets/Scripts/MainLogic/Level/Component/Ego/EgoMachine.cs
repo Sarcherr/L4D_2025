@@ -20,11 +20,14 @@ public class EgoMachine
     {
         foreach (var unitData in controller.Units.Values)
         {
-            UnitEgoContainers.Add(unitData.Name, new(unitData, this));
+            EgoContainer egoContainer = new(unitData, this);
+            // 初始化时按单位数据获得一定量普通Ego(仅针对敌人)
+            if (unitData.UnitKind == "Enemy")
+            {
+                egoContainer.OnEgoInit();
+            }
+            UnitEgoContainers.Add(unitData.Name, egoContainer);
         }
-        
-        //EventCenter.Instance.Subscribe<EgoArgs>("GainEgo", GainEgo);
-        //EventCenter.Instance.Subscribe<EgoArgs>("Remove", RemoveEgo);
     }
 
     /// <summary>
@@ -36,41 +39,17 @@ public class EgoMachine
     {
         return UnitEgoContainers[name].UnitEgo;
     }
+
     /// <summary>
-    /// 使目标Ego容器获取Ego
+    /// 大回合开始时Ego恢复
     /// </summary>
-    /// <typeparam name="TEventArgs"></typeparam>
-    /// <param name="sender"></param>
-    /// <param name="egoArgs"></param>
-    public void GainEgo<TEventArgs>(object sender, TEventArgs egoArgs)
+    public void RecoverEgo()
     {
-        if(egoArgs is EgoArgs)
+        foreach (var container in UnitEgoContainers.Values)
         {
-            UnitEgoContainers.TryGetValue((egoArgs as EgoArgs).TargetName, out var container);
-            if (container != null)
-            {
-                container.GainEgo((egoArgs as EgoArgs).Ego2Gain);
-            }
+            container.OnGeneralEgoRecover();
         }
     }
-    /// <summary>
-    /// 使目标Ego容器移除Ego
-    /// </summary>
-    /// <typeparam name="TEventArgs"></typeparam>
-    /// <param name="sender"></param>
-    /// <param name="egoArgs"></param>
-    public void RemoveEgo<TEventArgs>(object sender, TEventArgs egoArgs)
-    {
-        if(egoArgs is EgoArgs)
-        {
-            UnitEgoContainers.TryGetValue((egoArgs as EgoArgs).TargetName, out var container);
-            if (container != null)
-            {
-                container.RemoveEgo((egoArgs as EgoArgs).Ego2Remove);
-            }
-        }
-    }
-    // todo:移除的具体方案待完善
 
     /// <summary>
     /// 触发Ego特效
@@ -105,35 +84,4 @@ public class EgoExecutor
     }
 
 
-}
-
-/// <summary>
-/// Ego相关操作参数类
-/// </summary>
-public class EgoArgs : EventArgs
-{
-    /// <summary>
-    /// 目标名称
-    /// </summary>
-    public string TargetName;
-    /// <summary>
-    /// 待获取的Ego(无需指定时为null)
-    /// </summary>
-    public List<Ego> Ego2Gain;
-    /// <summary>
-    /// 待移除的Ego(ID，无需指定时为null)
-    /// </summary>
-    public List<int> Ego2Remove;
-    /// <summary>
-    /// 待移除的Ego数量(无需指定时为0)
-    /// </summary>
-    public int Ego2RemoveCount;
-
-    public EgoArgs(string targetName, List<Ego> ego2Gain, List<int> ego2Remove, int ego2RemoveCount)
-    {
-        TargetName = targetName;
-        Ego2Gain = ego2Gain;
-        Ego2Remove = ego2Remove;
-        Ego2RemoveCount = ego2RemoveCount;
-    }
 }
