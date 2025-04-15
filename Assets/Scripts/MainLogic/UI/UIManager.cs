@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UI;
+using UI.LevelUI.Controller;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
+    // 所有字典索引按命名空间索引分组，省略UI开头
+    // 如：LevelUI.Controller.PowerButton -> LevelUI.Controller.PowerButton
     /// <summary>
     /// 按钮字典
     /// </summary>
@@ -103,7 +105,10 @@ public class UIManager : Singleton<UIManager>
 
     public void RefreshSkillButton()
     {
-
+        foreach (var button in ButtonsDic["LevelUI.Controller.PowerButton"])
+        {
+            button.GetComponent<PowerButton>().Refresh("null");
+        }
     }
 
     /// <summary>
@@ -115,7 +120,7 @@ public class UIManager : Singleton<UIManager>
     }
 
     #endregion
-}
+} 
 
 /// <summary>
 /// UI消息容器(提交给PowerManager)

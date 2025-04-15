@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.LevelUI.Controller
 {
     public class EgoItem : MonoBehaviour
     {
