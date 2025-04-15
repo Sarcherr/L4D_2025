@@ -16,6 +16,11 @@ public class RuntimeUnitData
     /// </summary>
     public string Name;
     /// <summary>
+    /// 名称(中文)
+    /// </summary>
+    public string Name_CN;
+
+    /// <summary>
     /// Ego上限
     /// </summary>
     public int EgoLimit;
@@ -86,6 +91,7 @@ public class RuntimeUnitData
     {
         UnitKind = unitData.UnitKind;
         Name = unitData.Name;
+        Name_CN = unitData.Name_CN;
         EgoLimit = unitData.EgoLimit;
         EgoThreshold = unitData.EgoThreshold;
         EgoStartValue = unitData.EgoStartValue;

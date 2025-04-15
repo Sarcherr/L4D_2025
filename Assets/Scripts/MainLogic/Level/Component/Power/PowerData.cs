@@ -13,6 +13,10 @@ public struct PowerData
     /// </summary>
     public string name;
     /// <summary>
+    /// 能力名称(中文)
+    /// </summary>
+    public string name_CN;
+    /// <summary>
     /// 使用次数上限(0为无上限)
     /// </summary>
     public int limit;

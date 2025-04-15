@@ -15,6 +15,10 @@ public class UnitData
     /// 名称/ID
     /// </summary>
     public string Name;
+    /// <summary>
+    /// 名称(中文)
+    /// </summary>
+    public string Name_CN;
 
     /// <summary>
     /// 能力列表

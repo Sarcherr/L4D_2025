@@ -10,10 +10,9 @@ public class BattleManager : Singleton<BattleManager>
     {
         // 初始化战斗
         // 1. 初始化单位/控制器
-        // 2. 初始化UI
-        // 3. 开始战斗
-        // 4. 监听战斗结束事件
-        // 5. 监听单位死亡事件
+        // 2. 初始化TurnSystem
+        // 3. 初始化UI
+        // 4. 开始战斗
 
         // 步骤1：初始化单位/控制器
 
@@ -51,10 +50,13 @@ public class BattleManager : Singleton<BattleManager>
         ControllerManager.Instance.RegisterController(player);
         ControllerManager.Instance.RegisterController(enemy);
 
-        // 步骤2：初始化UI
+        // 步骤2：初始化TurnSystem
+        TurnManager.Instance.RefreshQueue();
+
+        // 步骤3：初始化UI
         // todo
 
-        // 步骤3：开始战斗
+        // 步骤4：开始战斗
         // todo
     }
 }
