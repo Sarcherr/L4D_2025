@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace UI
+namespace UI.LevelUI.Controller
 {
     /// <summary>
     /// 技能按钮
     /// </summary>
     public class PowerButton : MonoBehaviour
     { 
-        public string SkillName { get; private set; }
+        public string PowerName { get; private set; }
+        public int PowerID { get; private set; }
         public Button Button { get; private set; }
         public TextMeshPro Text { get; private set; }
 
@@ -21,22 +22,33 @@ namespace UI
             Text = GetComponentInChildren<TextMeshPro>();
             Button.onClick.AddListener(Power);
 
+            // 能力按钮ID直接截取按钮gameobject名称格式Power_ID中末尾的ID数字
+            string[] name = gameObject.name.Split('_');
+            if (name.Length > 1)
+            {
+                PowerID = int.Parse(name[1]);
+            }
+            else
+            {
+                Debug.LogError("PowerButton name format error, please check the name format.");
+            }
+
             // 注册UI
-            UIManager.Instance.RegisterUI("LevelUI", Button);
+            UIManager.Instance.RegisterUI("LevelUI.Controller.PowerButton", Button);
         }
 
         public void Refresh(string name)
         {
-            SkillName = name;
+            PowerName = name;
             Text.text = name;
         }
 
         public void Power()
         {
-            Debug.Log(SkillName);
-            if(SkillName != "null")
+            Debug.Log($"{PowerID}: {PowerName}");
+            if(PowerName != "null")
             {
-                ControllerManager.Instance.Player.Power(SkillName);
+                ControllerManager.Instance.Player.Power(PowerName);
             }
         }
     }
