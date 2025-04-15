@@ -31,13 +31,10 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     {
         BaseTurnQueue = new List<Turn>();
         CurrentTurnQueue = new List<Turn>();     
-        RefreshQueue();
-        CurrentTurn = CurrentTurnQueue[0];
-        CurrentGeneralTurn = 1;  
     }
 
     /// <summary>
-    /// 刷新回合序列
+    /// 刷新回合序列(用于初始化)
     /// </summary>
     public void RefreshQueue()
     {
@@ -88,6 +85,9 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             BaseTurnQueue[i] = turn;
             CurrentTurnQueue.Add(BaseTurnQueue[i]);
         }
+
+        CurrentTurn = CurrentTurnQueue[0];
+        CurrentGeneralTurn = 1;
     }
     /// <summary>
     /// 添加回合(目前只用于添加额外回合)

@@ -9,7 +9,7 @@ namespace UI
     /// <summary>
     /// 技能按钮
     /// </summary>
-    public class SkillButton : MonoBehaviour
+    public class PowerButton : MonoBehaviour
     { 
         public string SkillName { get; private set; }
         public Button Button { get; private set; }
@@ -20,6 +20,9 @@ namespace UI
             Button = GetComponent<Button>();
             Text = GetComponentInChildren<TextMeshPro>();
             Button.onClick.AddListener(Power);
+
+            // 注册UI
+            UIManager.Instance.RegisterUI("LevelUI", Button);
         }
 
         public void Refresh(string name)

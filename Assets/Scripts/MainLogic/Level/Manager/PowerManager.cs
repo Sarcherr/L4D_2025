@@ -7,11 +7,6 @@ using UnityEngine;
 /// </summary>
 public class PowerManager : Singleton<PowerManager>
 {
-    protected override void Init()
-    {
-
-    }
-
     /// <summary>
     /// 处理能力请求
     /// </summary>
