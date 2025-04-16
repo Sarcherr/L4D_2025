@@ -40,7 +40,7 @@ public class RuntimeUnitData
     /// <summary>
     /// 能力使用次数记录
     /// </summary>
-    public List<(PowerData, int)> PowerRecord;
+    public List<(PowerData powerData, int usedCount)> PowerRecord;
     /// <summary>
     /// 是否处于情感爆发状态
     /// </summary>
@@ -61,7 +61,7 @@ public class RuntimeUnitData
     /// <summary>
     /// 当前命中率
     /// </summary>
-    public int CurrentHitChance;
+    public float CurrentHitChance;
     /// <summary>
     /// 当前闪避率
     /// </summary>

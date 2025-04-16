@@ -60,6 +60,8 @@ public class UIManager : Singleton<UIManager>
             }
             TogglesDic[UIgroup].Add(targetUI as Toggle);
         }
+
+        Debug.Log($"RegisterUI: {UIgroup} - {(targetUI as MonoBehaviour).gameObject.name}");
     }
     /// <summary>
     /// 注销UI
@@ -90,6 +92,8 @@ public class UIManager : Singleton<UIManager>
                 TogglesDic[UIgroup].Remove(targetUI as Toggle);
             }
         }
+
+        Debug.Log($"UnregisterUI: {UIgroup} - {(targetUI as MonoBehaviour).gameObject.name}");
     }
 
     public void ShowUI()
@@ -103,11 +107,16 @@ public class UIManager : Singleton<UIManager>
 
     #region UI_Level
 
+    /// <summary>
+    /// 刷新技能按钮
+    /// </summary>
     public void RefreshSkillButton()
     {
         foreach (var button in ButtonsDic["LevelUI.Controller.PowerButton"])
         {
-            button.GetComponent<PowerButton>().Refresh("null");
+            string powerName = ControllerManager.Instance.AllUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                PowerRecord[button.GetComponent<PowerButton>().PowerID].powerData.name;
+            button.GetComponent<PowerButton>().Refresh(powerName);
         }
     }
 

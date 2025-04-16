@@ -37,12 +37,19 @@ namespace UI.LevelUI.Controller
             UIManager.Instance.RegisterUI("LevelUI.Controller.PowerButton", Button);
         }
 
+        /// <summary>
+        /// 刷新按钮
+        /// </summary>
+        /// <param name="name">对应能力名称</param>
         public void Refresh(string name)
         {
             PowerName = name;
             Text.text = name;
         }
 
+        /// <summary>
+        /// 按钮点击事件
+        /// </summary>
         public void Power()
         {
             Debug.Log($"{PowerID}: {PowerName}");

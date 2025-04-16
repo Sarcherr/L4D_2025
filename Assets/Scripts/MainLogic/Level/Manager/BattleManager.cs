@@ -56,6 +56,7 @@ public class BattleManager : Singleton<BattleManager>
         // 步骤3：初始化UI
         // todo
 
+
         // 步骤4：开始战斗
         // todo
     }
