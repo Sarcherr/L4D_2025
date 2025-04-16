@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 221879277}
   - component: {fileID: 221879276}
   m_Layer: 5
-  m_Name: Skill_4
+  m_Name: Power_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -598,7 +598,7 @@ GameObject:
   - component: {fileID: 570777296}
   - component: {fileID: 570777299}
   m_Layer: 5
-  m_Name: Skill_2
+  m_Name: Power_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 575804114}
   - component: {fileID: 575804117}
   m_Layer: 5
-  m_Name: Skill_3
+  m_Name: Power_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1231,7 +1231,7 @@ GameObject:
   - component: {fileID: 1556405350}
   - component: {fileID: 1556405353}
   m_Layer: 5
-  m_Name: Skill_1
+  m_Name: Power_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

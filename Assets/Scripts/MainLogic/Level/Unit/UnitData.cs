@@ -53,7 +53,7 @@ public class UnitData
     /// <summary>
     /// 命中率
     /// </summary>
-    public int HitChance;
+    public float HitChance;
     /// <summary>
     /// 闪避率
     /// </summary>
