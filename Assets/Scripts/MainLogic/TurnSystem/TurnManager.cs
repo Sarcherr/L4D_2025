@@ -43,7 +43,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         foreach (var pair in ControllerManager.Instance.AllEgoContainers)
         {
             // 插入回合对应单位数据
-            var data = ControllerManager.Instance.AllUnitData[pair.Value.BelongName];
+            var data = ControllerManager.Instance.AllRuntimeUnitData[pair.Value.BelongName];
             Turn turn2Add = new Turn()
             {
                 Name = pair.Value.BelongName,
@@ -56,14 +56,14 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             {
                 if (BaseTurnQueue.Count == 0)
                 {
-                    BaseTurnQueue.Add(turn2Add);
+                    BaseTurnQueue.Add(turn2Add);     
                 }
                 else
                 {
-                    for (int i = 0; i > BaseTurnQueue.Count; i++)
+                    for (int i = 0; i < BaseTurnQueue.Count; i++)
                     {
                         if (pair.Value.UnitEgo.Count > BaseTurnQueue[i].EgoValue)
-                        {
+                        {          
                             BaseTurnQueue.Insert(i, turn2Add);
                             break;
                         }
@@ -88,6 +88,13 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
 
         CurrentTurn = CurrentTurnQueue[0];
         CurrentGeneralTurn = 1;
+
+        ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
+        Debug.Log($"CurrentTurn: {CurrentTurn.Name} - {CurrentTurn.EgoValue} - {CurrentTurn.UnitKind} - {CurrentGeneralTurn}");
+        Debug.Log("CurrentTurnQueue: " + string.Join(", ", CurrentTurnQueue.ConvertAll(t => t.Name).ToArray()));
+
+        // 刷新UI
+        UIManager.Instance.RefreshSkillButton();
     }
     /// <summary>
     /// 添加回合(目前只用于添加额外回合)
@@ -243,14 +250,13 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             CurrentTurnQueue = new List<Turn>(BaseTurnQueue);
             CurrentTurn = CurrentTurnQueue[0];
         }
-        else if (ControllerManager.Instance.AllUnitData[CurrentTurn.Name].UnitKind == "Player")
-        {
-            ControllerManager.Instance.Player.SwitchUnit(CurrentTurn.Name);
-        }
         else
         {
-            ControllerManager.Instance.Enemy.SwitchUnit(CurrentTurn.Name);
+            ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
         }
+
+        // 刷新UI
+        UIManager.Instance.RefreshSkillButton();
     }
 
     public void OnTurnStart()

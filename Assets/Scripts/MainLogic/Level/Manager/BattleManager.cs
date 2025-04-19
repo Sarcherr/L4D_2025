@@ -18,31 +18,38 @@ public class BattleManager : Singleton<BattleManager>
 
         // 以string索引从GlobalData.RuntimeUnitDataDic中获取单位数据
         List<RuntimeUnitData> playerUnitData = new List<RuntimeUnitData>();
-        foreach (string unitName in playerUnits)
+        if(playerUnits != null )
         {
-            if (GlobalData.RuntimeUnitDataDic.TryGetValue(unitName, out RuntimeUnitData unitData))
+            foreach (string unitName in playerUnits)
             {
-                playerUnitData.Add(unitData);
-            }
-            else
-            {
-                Debug.LogError($"Unit {unitName} not found in RuntimeUnitDataDic");
+                if (GlobalData.RuntimeUnitDataDic.TryGetValue(unitName, out RuntimeUnitData unitData))
+                {
+                    playerUnitData.Add(unitData);
+                    Debug.Log($"Unit {unitName} found in RuntimeUnitDataDic");
+                }
+                else
+                {
+                    Debug.LogError($"Unit {unitName} not found in RuntimeUnitDataDic");
+                }
             }
         }
         Controller player = new Controller("Player", playerUnitData);
 
         List<RuntimeUnitData> enemyUnitData = new List<RuntimeUnitData>();
-        foreach (string unitName in enemyUnits)
+        if(enemyUnits != null)
         {
-            if (GlobalData.UnitDataDic.TryGetValue(unitName, out UnitData unitData))
+            foreach (string unitName in enemyUnits)
             {
-                RuntimeUnitData runtimeUnitData = new RuntimeUnitData();
-                runtimeUnitData.CopyData(unitData);
-                enemyUnitData.Add(runtimeUnitData);
-            }
-            else
-            {
-                Debug.LogError($"Unit {unitName} not found in RuntimeUnitDataDic");
+                if (GlobalData.UnitDataDic.TryGetValue(unitName, out UnitData unitData))
+                {
+                    RuntimeUnitData runtimeUnitData = new RuntimeUnitData();
+                    runtimeUnitData.CopyData(unitData);
+                    enemyUnitData.Add(runtimeUnitData);
+                }
+                else
+                {
+                    Debug.LogError($"Unit {unitName} not found in RuntimeUnitDataDic");
+                }
             }
         }
         Controller enemy = new Controller("Enemy", enemyUnitData);
@@ -55,7 +62,7 @@ public class BattleManager : Singleton<BattleManager>
 
         // 步骤3：初始化UI
         // todo
-
+        UIManager.Instance.RefreshSkillButton();
 
         // 步骤4：开始战斗
         // todo

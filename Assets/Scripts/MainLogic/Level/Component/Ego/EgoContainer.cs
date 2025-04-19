@@ -30,6 +30,7 @@ public class EgoContainer
         BelongName = unitData.Name;
         EgoLimit = unitData.EgoLimit;
         EgoThreshold = unitData.EgoThreshold;
+        UnitEgo = new List<Ego>();
     }
 
     /// <summary>

@@ -14,12 +14,12 @@ namespace UI.LevelUI.Controller
         public string PowerName { get; private set; }
         public int PowerID { get; private set; }
         public Button Button { get; private set; }
-        public TextMeshPro Text { get; private set; }
+        public TextMeshProUGUI Text { get; private set; }
 
         private void Start()
         {
             Button = GetComponent<Button>();
-            Text = GetComponentInChildren<TextMeshPro>();
+            Text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             Button.onClick.AddListener(Power);
 
             // 能力按钮ID直接截取按钮gameobject名称格式Power_ID中末尾的ID数字

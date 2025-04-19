@@ -114,8 +114,9 @@ public class UIManager : Singleton<UIManager>
     {
         foreach (var button in ButtonsDic["LevelUI.Controller.PowerButton"])
         {
-            string powerName = ControllerManager.Instance.AllUnitData[ControllerManager.Instance.Player.CurrentUnit].
-                PowerRecord[button.GetComponent<PowerButton>().PowerID].powerData.name;
+            string powerName = ControllerManager.Instance.AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
+            Debug.Log($"PowerName: {powerName}");
             button.GetComponent<PowerButton>().Refresh(powerName);
         }
     }
