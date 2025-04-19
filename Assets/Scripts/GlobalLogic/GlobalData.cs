@@ -30,7 +30,13 @@ public static class GlobalData
 
         // 注意PowerDataDic的反序列化要在UnitDataDic之前
         DeSerializeBytes_PowerData(powerData);
-        DeSerializeBytes_UnitData(unitData);   
+        DeSerializeBytes_UnitData(unitData);
+
+        // 测试用，记得删除
+
+        GenerateRuntimeUnitData();
+
+        // 测试用，记得删除
     }
 
     /// <summary>
@@ -39,7 +45,26 @@ public static class GlobalData
     /// </summary>
     public static void GenerateRuntimeUnitData()
     {
+        Debug.Log("/// GenerateRuntimeUnitData ///");
+
         List<string> playerUnits = UnitDataDic.Where(x => x.Value.UnitKind == "Player").Select(x => x.Key).ToList();
+
+        if (playerUnits.Count == 0)
+        {
+            Debug.LogError("GenerateRuntimeUnitData Error: No player units found");
+            return;
+        }
+
+        foreach (var unit in playerUnits)
+        {
+            RuntimeUnitData runtimeUnitData = new RuntimeUnitData();
+            runtimeUnitData.CopyData(UnitDataDic[unit]);
+
+            Debug.Log($"Generating runtime data for unit: {unit}");
+            RuntimeUnitDataDic.Add(unit, runtimeUnitData);
+        }
+
+        Debug.Log("/// GenerateRuntimeUnitData End ///");
     }
 
     /// <summary>

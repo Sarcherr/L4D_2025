@@ -99,7 +99,7 @@ public class RuntimeUnitData
         PowerRecord = new List<(PowerData, int)>();
         foreach (var power in unitData.PowerList)
         {
-            PowerRecord.Add((power, GlobalData.PowerDataDic[power.name].limit));
+            PowerRecord.Add((power, 0));
         }
         CurrentHealth = unitData.Health;
         CurrentAttack = unitData.Attack;

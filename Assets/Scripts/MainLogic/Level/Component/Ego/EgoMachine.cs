@@ -18,7 +18,7 @@ public class EgoMachine
 
     public EgoMachine(IController controller)
     {
-        foreach (var unitData in controller.Units.Values)
+        foreach (var unitData in controller.RuntimeUnits.Values)
         {
             EgoContainer egoContainer = new(unitData, this);
             // 初始化时按单位数据获得一定量普通Ego(仅针对敌人)

@@ -14,7 +14,7 @@ public class Powerable
         PowerRequest powerData = new PowerRequest();
         powerData.Name = power;
         powerData.Origin = origin.CurrentUnit;
-        powerData.UnitKind = origin.Units[origin.CurrentUnit].UnitKind;
+        powerData.UnitKind = origin.RuntimeUnits[origin.CurrentUnit].UnitKind;
 
         PowerManager.Instance.HandleRequest(powerData);
     }

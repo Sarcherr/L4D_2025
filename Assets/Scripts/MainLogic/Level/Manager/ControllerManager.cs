@@ -16,11 +16,11 @@ public class ControllerManager : Singleton<ControllerManager>
     /// <summary>
     /// 储存全局UnitData索引
     /// </summary>
-    public Dictionary<string, RuntimeUnitData> AllUnitData;
+    public Dictionary<string, RuntimeUnitData> AllRuntimeUnitData = new();
     /// <summary>
     /// 储存全局EgoContainer索引
     /// </summary>
-    public Dictionary<string, EgoContainer> AllEgoContainers;
+    public Dictionary<string, EgoContainer> AllEgoContainers = new();
 
     /// <summary>
     /// 注册控制器
@@ -37,13 +37,36 @@ public class ControllerManager : Singleton<ControllerManager>
             Enemy = controller;
         }
 
-        foreach (var pair in controller.Units)
+        if(controller.RuntimeUnits != null)
         {
-            AllUnitData.Add(pair.Key, pair.Value);
+            foreach (var pair in controller.RuntimeUnits)
+            {
+                AllRuntimeUnitData.Add(pair.Key, pair.Value);
+            }
         }
-        foreach (var pair in controller.EgoMachine.UnitEgoContainers)
+
+        if(controller.EgoMachine.UnitEgoContainers != null)
         {
-            AllEgoContainers.Add(pair.Key, pair.Value);
+            foreach (var pair in controller.EgoMachine.UnitEgoContainers)
+            {
+                AllEgoContainers.Add(pair.Key, pair.Value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 切换当前行动单位
+    /// </summary>
+    /// <param name="name"></param>
+    public void SwitchUnit(string name)
+    {
+        if (AllRuntimeUnitData[name].UnitKind == "Player")
+        {
+            Player.SwitchUnit(name);
+        }
+        else if (AllRuntimeUnitData[name].UnitKind == "Enemy")
+        {
+            Enemy.SwitchUnit(name);
         }
     }
 }

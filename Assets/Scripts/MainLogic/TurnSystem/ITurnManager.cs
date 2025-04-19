@@ -7,7 +7,6 @@ public interface ITurnManager
     public List<Turn> CurrentTurnQueue { get; set; }
     public List<Turn> BaseTurnQueue { get; set; }
     public Turn CurrentTurn { get; set; }
-    public int CurrentGeneralTurn { get; set; }
 
     public void RefreshQueue();
 
