@@ -114,10 +114,14 @@ public class UIManager : Singleton<UIManager>
     {
         foreach (var button in ButtonsDic["LevelUI.Controller.PowerButton"])
         {
-            string powerName = ControllerManager.Instance.AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
-                PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
-            Debug.Log($"PowerName: {powerName}");
-            button.GetComponent<PowerButton>().Refresh(powerName);
+            // 只有前四个技能按钮需要刷新
+            if (button.GetComponent<PowerButton>().PowerID <= 4)
+            {
+                string powerName = ControllerManager.Instance.AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                    PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
+                Debug.Log($"PowerName: {powerName}");
+                button.GetComponent<PowerButton>().Refresh(powerName);
+            }
         }
     }
 
