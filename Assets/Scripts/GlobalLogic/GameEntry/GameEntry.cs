@@ -2,19 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameEntry : IGameEntry
+public static class GameEntry
 {
-    public void Init()
+    [RuntimeInitializeOnLoadMethod]
+    public static void Init()
     {
-        LoadGameData();
-        LoadUnitData();     
+        LoadData();     
     }
-    public void LoadUnitData()
+    public static void LoadData()
     {
-        Debug.Log("LoadUnitData");
-    }
-    public void LoadGameData()
-    {
-        Debug.Log("LoadGameData");
+        Debug.Log("LoadData");
+        GlobalData.Init();
     }
 }
