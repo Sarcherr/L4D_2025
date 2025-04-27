@@ -134,8 +134,7 @@ public class UIManager : Singleton<UIManager>
         PowerManager.Instance.GeneratePower(message);
     }
 
-    #endregion
-    
+    #endregion 
     
     #region UI_CharacterSelect
 
