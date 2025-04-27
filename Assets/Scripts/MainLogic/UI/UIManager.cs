@@ -117,7 +117,8 @@ public class UIManager : Singleton<UIManager>
             // 只有前四个技能按钮需要刷新
             if (button.GetComponent<PowerButton>().PowerID <= 4)
             {
-                string powerName = ControllerManager.Instance.AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                string powerName = ControllerManager.Instance.
+                    AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
                     PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
                 Debug.Log($"PowerName: {powerName}");
                 button.GetComponent<PowerButton>().Refresh(powerName);
@@ -133,6 +134,27 @@ public class UIManager : Singleton<UIManager>
         PowerManager.Instance.GeneratePower(message);
     }
 
+    #endregion 
+    
+    #region UI_CharacterSelect
+
+    public void RefreshCharacterSelectButton()
+    {
+        Dictionary<int,Button> characterSelectButtons = new Dictionary<int,Button>();
+        
+        foreach (var button in ButtonsDic["CharacterSelectUI.CharacterSelectButton"])
+        {
+            characterSelectButtons.Add(button.GetComponent<CharacterSelectButton>().CharacterID,button);
+        }
+        int buttonIndex = 1;
+
+        foreach (var pair in GlobalData.RuntimeUnitDataDic)
+        {
+             characterSelectButtons[buttonIndex].GetComponent<CharacterSelectButton>().Refresh(pair.Key);
+             buttonIndex++;
+        }
+    }
+    
     #endregion
 } 
 
