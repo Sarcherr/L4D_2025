@@ -53,7 +53,7 @@ namespace UI.LevelUI.Controller
         public void Power()
         {
             Debug.Log($"{PowerID}: {PowerName}");
-            if(PowerName != "null")
+            if(PowerName != null)
             {
                 ControllerManager.Instance.Player.Power(PowerName);
             }
