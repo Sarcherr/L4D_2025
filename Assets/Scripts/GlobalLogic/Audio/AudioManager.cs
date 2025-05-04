@@ -82,6 +82,11 @@ public class AudioManager : MonoSingleton<AudioManager>
     /// <param name="pitch">音调/速度</param>
     public void PlaySound(string soundName, float volume = 1f, float pitch = 1f)
     {
+        if (volume == -1) 
+            volume = Random.Range(0.9f, 1.1f);
+        if (pitch == -1) 
+            pitch = Random.Range(0.9f, 1.1f);
+
         AudioClip clip = System.Array.Find(soundClips, x => x.name == soundName);
         if (clip != null)
         {

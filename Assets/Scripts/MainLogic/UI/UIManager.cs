@@ -140,6 +140,9 @@ public class UIManager : Singleton<UIManager>
 
     public void RefreshCharacterSelectButton()
     {
+        // 清空已选择的角色列表
+        CharacterSelectManager.Instance.SelectedCharacters.Clear();
+
         Dictionary<int,Button> characterSelectButtons = new Dictionary<int,Button>();
         
         foreach (var button in ButtonsDic["CharacterSelectUI.CharacterSelectButton"])
