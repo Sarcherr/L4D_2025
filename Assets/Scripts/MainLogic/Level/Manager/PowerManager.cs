@@ -14,6 +14,7 @@ public class PowerManager : Singleton<PowerManager>
     public void HandleRequest(PowerRequest powerRequest)
     {
         // todo:向UI发送请求
+        // 激活对应UI
     }
 
     /// <summary>

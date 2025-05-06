@@ -14,7 +14,7 @@ public class ControllerManager : Singleton<ControllerManager>
     /// </summary>
     public IController Enemy;
     /// <summary>
-    /// 储存全局UnitData索引
+    /// 储存全局RuntimrUnitData索引
     /// </summary>
     public Dictionary<string, RuntimeUnitData> AllRuntimeUnitData = new();
     /// <summary>

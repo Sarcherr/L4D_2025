@@ -16,6 +16,12 @@ public class CharacterSelectConfirm : MonoBehaviour
 
     void Confirm()
     {
+        if(CharacterSelectManager.Instance.SelectedCharacters.Count < 4)
+        {
+            Debug.Log("Please select 4 characters.");
+            return;
+        }
+        // 加载战斗场景
         SceneManager.LoadScene("TestLevel");
     }
 }

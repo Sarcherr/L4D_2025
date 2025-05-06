@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleTest : MonoBehaviour
+public class AudioTest : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        //List<string> names = new List<string> { "Dolora", "Nora", "Jia_Baoyu" };
-        BattleManager.Instance.InitBattle(CharacterSelectManager.Instance.SelectedCharacters, null);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetMouseButtonDown(0))
+        {
+            AudioManager.Instance.PlaySound("Pistol_Mars712_Shot");
+        }
     }
 }

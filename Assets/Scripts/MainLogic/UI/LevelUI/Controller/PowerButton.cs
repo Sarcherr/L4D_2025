@@ -16,7 +16,7 @@ namespace UI.LevelUI.Controller
         public Button Button { get; private set; }
         public TextMeshProUGUI Text { get; private set; }
 
-        private void Start()
+        private void Awake()
         {
             Button = GetComponent<Button>();
             Text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -53,7 +53,7 @@ namespace UI.LevelUI.Controller
         public void Power()
         {
             Debug.Log($"{PowerID}: {PowerName}");
-            if(PowerName != "null")
+            if(PowerName != null)
             {
                 ControllerManager.Instance.Player.Power(PowerName);
             }

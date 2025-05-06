@@ -27,6 +27,8 @@ public class AttackManager : Singleton<AttackManager>
         Executor.ExecuteAttack(request);
     }
 
+    
+
     /// <summary>
     /// 检查是否命中
     /// </summary>
@@ -86,4 +88,7 @@ public class AttackExecutor
     }
 }
 
+public struct Attack
+{
 
+}
