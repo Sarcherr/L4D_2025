@@ -20,6 +20,15 @@ public struct PowerData
     /// 使用次数上限(0为无上限)
     /// </summary>
     public int limit;
+    /// <summary>
+    /// Ego消耗
+    /// </summary>
+    public int egoConsumption;
+    /// <summary>
+    /// 技能描述
+    /// </summary>
+    public string description;
+
     ///// <summary>
     ///// 随机系数最小值
     ///// </summary>

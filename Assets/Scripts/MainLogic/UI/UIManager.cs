@@ -120,11 +120,17 @@ public class UIManager : Singleton<UIManager>
                 string powerName = ControllerManager.Instance.
                     AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
                     PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
-                Debug.Log($"PowerName: {powerName}");
-                button.GetComponent<PowerButton>().Refresh(powerName);
+                string powerDescription = ControllerManager.Instance.
+                    AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                    PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.description;
+
+                Debug.Log($"PowerName: {powerName} PowerDescription: {powerDescription}");
+                button.GetComponent<PowerButton>().Refresh(powerName, powerDescription);
             }
         }
     }
+
+    // todo: 带单位名称参数的刷新技能按钮方法
 
     /// <summary>
     /// 向PowerManager发送UI消息
