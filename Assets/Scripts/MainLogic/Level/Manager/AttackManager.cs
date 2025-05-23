@@ -90,5 +90,20 @@ public class AttackExecutor
 
 public struct Attack
 {
-
+    /// <summary>
+    /// 是否命中
+    /// </summary>
+    public bool IsHit;
+    /// <summary>
+    /// 是否暴击
+    /// </summary>
+    public bool IsCrit;
+    /// <summary>
+    /// 是否抵抗
+    /// </summary>
+    public bool IsResist;
+    /// <summary>
+    /// 伤害值
+    /// </summary>
+    public int Damage;
 }
