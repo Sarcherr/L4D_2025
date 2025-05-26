@@ -77,11 +77,16 @@ public class RuntimeUnitData
     /// <summary>
     /// 当前抵抗率
     /// </summary>
-    public float CurrentResistanceRate;
+    public float CurrentResistanceChance;
     /// <summary>
     /// 当前减伤率
     /// </summary>
     public float CurrentDamageReductionRate;
+
+    /// <summary>
+    /// 当前攻击加成
+    /// </summary>
+    public float CurrentExtraAttackRate;
 
     /// <summary>
     /// 复制UnitData数据
@@ -107,8 +112,10 @@ public class RuntimeUnitData
         CurrentDogeChance = unitData.DogeChance;
         CurrentCritChance = unitData.CritChance;
         CurrentCritRate = unitData.CritRate;
-        CurrentResistanceRate = unitData.ResistanceRate;
+        CurrentResistanceChance = unitData.ResistanceRate;
         CurrentDamageReductionRate = unitData.DamageReductionRate;
+
+        CurrentExtraAttackRate = 0f;
         IsBurst = false;
         IsOutOfControl = false;
     }
