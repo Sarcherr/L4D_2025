@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class GameEntry
@@ -7,7 +5,7 @@ public static class GameEntry
     [RuntimeInitializeOnLoadMethod]
     public static void Init()
     {
-        LoadData();     
+        LoadData();
     }
     public static void LoadData()
     {

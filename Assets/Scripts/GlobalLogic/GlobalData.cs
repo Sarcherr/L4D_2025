@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Data;
 using System.IO;
 using System.Linq;
-using System.Data;
+using UnityEngine;
 
 public static class GlobalData
 {

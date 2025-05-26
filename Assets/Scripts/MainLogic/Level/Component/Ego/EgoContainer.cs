@@ -1,8 +1,4 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EgoContainer
 {
@@ -42,11 +38,11 @@ public class EgoContainer
     {
         foreach (var ego in egoList)
         {
-            if(egoList.Count == EgoThreshold + 1)
+            if (egoList.Count == EgoThreshold + 1)
             {
                 OnEgoBurst();
             }
-            else if(egoList.Count > EgoLimit)
+            else if (egoList.Count > EgoLimit)
             {
                 OnEgoOutOfControl();
                 break;
@@ -102,9 +98,9 @@ public class EgoContainer
     {
         removeEgos = new();
 
-        if(UnitEgo.Count >= removeCount)
+        if (UnitEgo.Count >= removeCount)
         {
-            if(beginFromEnd)
+            if (beginFromEnd)
             {
                 for (int i = 0; i < removeCount; i++)
                 {
@@ -294,10 +290,10 @@ public class EgoContainer
         int cannotConsumeCount = UnitEgo.FindAll(x => x.CanConsume == false).Count;
         // 注意判断时除去不能消耗的Ego数量
         if (UnitEgo.Count - cannotConsumeCount >= consumeCount)
-        {  
+        {
             if (beginFromEnd)
             {
-                for(int i = 0; i < consumeCount; i++)
+                for (int i = 0; i < consumeCount; i++)
                 {
                     if (UnitEgo[UnitEgo.Count - 1 - i].CanConsume)
                     {
@@ -308,7 +304,7 @@ public class EgoContainer
             }
             else
             {
-                for(int i = 0; i < consumeCount; i++)
+                for (int i = 0; i < consumeCount; i++)
                 {
                     if (UnitEgo[i].CanConsume)
                     {

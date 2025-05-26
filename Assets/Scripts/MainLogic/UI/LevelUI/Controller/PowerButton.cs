@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace UI.LevelUI.Controller
 {
@@ -10,7 +8,7 @@ namespace UI.LevelUI.Controller
     /// 技能按钮
     /// </summary>
     public class PowerButton : MonoBehaviour
-    { 
+    {
         public string PowerName { get; private set; }
         public string PowerDescription { get; private set; }
         public int PowerID { get; private set; }
@@ -55,7 +53,7 @@ namespace UI.LevelUI.Controller
         public void Power()
         {
             Debug.Log($"{PowerID}: {PowerName}");
-            if(PowerName != null)
+            if (PowerName != null)
             {
                 ControllerManager.Instance.Player.Power(PowerName);
             }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ public class Controller : IController
         CotrollerKind = controllerKind;
         RuntimeUnits = new Dictionary<string, RuntimeUnitData>();
 
-        if(runtimeUnitDatas != null)
+        if (runtimeUnitDatas != null)
         {
             foreach (var unitData in runtimeUnitDatas)
             {
@@ -68,7 +67,7 @@ public class Controller : IController
 
     public void OnTurnStart()
     {
-        
+
     }
 
     public void OnTurnEnd()

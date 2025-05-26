@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// 攻击管理器
@@ -47,9 +45,11 @@ public class AttackManager : Singleton<AttackManager>
         bool crit = CheckCrit(originUnitData.CurrentCritChance);
         bool resist = CheckResistance(dotChance, targetUnitData.CurrentResistanceChance);
 
-        if(!hit)
+        Attack attackResult;
+
+        if (!hit)
         {
-            return new Attack
+            attackResult =  new Attack
             {
                 Origin = origin,
                 Target = target,
@@ -64,12 +64,12 @@ public class AttackManager : Singleton<AttackManager>
             // 基础伤害 = 攻击单位攻击力 * (1 + 攻击单位额外攻击力) * 技能伤害倍率 * 受击单位当前减伤率
             int damage = (int)(originUnitData.CurrentAttack * (1 + originUnitData.CurrentExtraAttackRate)
                 * damageRate * targetUnitData.CurrentDamageReductionRate);
-            if(crit)
+            if (crit)
             {
                 damage = (int)(damage * originUnitData.CurrentCritRate);
             }
 
-            return new Attack
+            attackResult = new Attack
             {
                 Origin = origin,
                 Target = target,
@@ -79,6 +79,9 @@ public class AttackManager : Singleton<AttackManager>
                 Damage = damage
             };
         }
+
+        HandleAttack(attackResult);
+        return attackResult;
     }
     /// <summary>
     /// 获取治疗结果
@@ -92,6 +95,9 @@ public class AttackManager : Singleton<AttackManager>
         RuntimeUnitData originUnitData = ControllerManager.Instance.AllRuntimeUnitData[origin];
 
         bool crit = CheckCrit(originUnitData.CurrentCritChance);
+
+        Heal healResult;
+
         // 基础治疗 = 攻击单位攻击力 * (1 + 攻击单位额外攻击力) * 技能治疗倍率
         int healValue = (int)(originUnitData.CurrentAttack * (1 + originUnitData.CurrentExtraAttackRate)
             * healRate);
@@ -99,13 +105,16 @@ public class AttackManager : Singleton<AttackManager>
         {
             healValue = (int)(healValue * originUnitData.CurrentCritRate);
         }
-        return new Heal
+        healResult = new Heal
         {
             Origin = origin,
             Target = target,
             IsCrit = crit,
             HealValue = healValue
         };
+
+        HandleHeal(healResult);
+        return healResult;
     }
 
     /// <summary>
@@ -189,8 +198,20 @@ public class AttackExecutor
 
     public AttackExecutor()
     {
-        // todo:初始化注册所有攻击行为对应的方法
+        // todo:初始化注册所有攻击行为对应的方法，名称索引与AttackRequest.Name一致
         // ps. 方法格式统一为void MethodName(AttackRequest request)
+        // 使用反射自动注册所有方法
+        var methods = 
+            GetType().GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        foreach (var method in methods)
+        {
+            if (method.ReturnType == typeof(void) && method.GetParameters().Length == 1 &&
+                method.GetParameters()[0].ParameterType == typeof(AttackRequest))
+            {
+                AttackActions[method.Name] = 
+                    (Action<AttackRequest>)Delegate.CreateDelegate(typeof(Action<AttackRequest>), this, method);
+            }
+        }
     }
 
     /// <summary>
@@ -204,6 +225,44 @@ public class AttackExecutor
             action.Invoke(request);
         }
     }
+
+    /// <summary>
+    /// 德劳拉-神圣重击
+    /// <para>对敌方单体造成一次倍率150%的伤害，命中后获得一点“愤怒ego”若暴击，获得量*3</para>
+    /// </summary>
+    /// <param name="request"></param>
+    public void Holy_Strike(AttackRequest request)
+    {
+        foreach (var target in request.Target)
+        {
+            Attack attackResult = AttackManager.Instance.GetAttack(request.Origin, target, 1.5f);
+
+            if (attackResult.IsHit)
+            {
+                // 获取攻击者Ego容器
+                var egoContainer = ControllerManager.Instance.AllEgoContainers[request.Origin];
+                // 创建愤怒Ego
+                Ego angerEgo = new Ego
+                {
+                    EgoType = "Anger",
+                    HostName = request.Origin,
+                    CanConsume = false,
+                };
+
+                if (attackResult.IsCrit)
+                {
+                    // 暴击时获得3点愤怒Ego
+                    egoContainer.GainEgo(new List<Ego> { angerEgo, angerEgo, angerEgo });
+                }
+                else
+                {
+                    // 普通攻击获得1点愤怒Ego
+                    egoContainer.GainEgo(new List<Ego> { angerEgo });
+                }
+            }
+        }
+    }
+
 }
 
 /// <summary>

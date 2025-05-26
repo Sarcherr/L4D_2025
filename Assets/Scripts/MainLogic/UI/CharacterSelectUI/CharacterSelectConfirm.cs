@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterSelectConfirm : MonoBehaviour
 {
-    public Button ConfirmButton{get; private set;}
+    public Button ConfirmButton { get; private set; }
 
     void Start()
     {
@@ -16,7 +14,7 @@ public class CharacterSelectConfirm : MonoBehaviour
 
     void Confirm()
     {
-        if(CharacterSelectManager.Instance.SelectedCharacters.Count < 4)
+        if (CharacterSelectManager.Instance.SelectedCharacters.Count < 4)
         {
             Debug.Log("Please select 4 characters.");
             return;

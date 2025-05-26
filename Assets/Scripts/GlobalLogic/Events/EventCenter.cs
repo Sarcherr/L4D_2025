@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 /// <summary>
 /// 事件中心, 用于事件的订阅、取消订阅、通知
@@ -29,7 +27,7 @@ public class EventCenter : Singleton<EventCenter>, IEventCenter
         }
         else
         {
-            _eventHandlers[eventName] = new(){ eventHandler };
+            _eventHandlers[eventName] = new() { eventHandler };
         }
     }
 

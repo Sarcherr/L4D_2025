@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SkillManager : Singleton<SkillManager>
 {
@@ -26,8 +24,20 @@ public class SkillExecutor
 
     public SkillExecutor()
     {
-        // todo:初始化注册所有技能行为对应的方法
+        // todo:初始化注册所有技能行为对应的方法，名称索引与SkillRequest.Name一致
         // ps. 方法格式统一为void MethodName(SkillRequest request)
+        // 使用反射自动注册所有方法
+        var methods =
+            GetType().GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        foreach (var method in methods)
+        {
+            if (method.ReturnType == typeof(void) && method.GetParameters().Length == 1 &&
+                method.GetParameters()[0].ParameterType == typeof(SkillRequest))
+            {
+                SkillActions[method.Name] =
+                    (Action<SkillRequest>)Delegate.CreateDelegate(typeof(Action<SkillRequest>), this, method);
+            }
+        }
     }
 
     public void ExecuteSkill(SkillRequest request)
