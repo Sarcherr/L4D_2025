@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ControllerManager : Singleton<ControllerManager>
 {
@@ -37,7 +34,7 @@ public class ControllerManager : Singleton<ControllerManager>
             Enemy = controller;
         }
 
-        if(controller.RuntimeUnits != null)
+        if (controller.RuntimeUnits != null)
         {
             foreach (var pair in controller.RuntimeUnits)
             {
@@ -45,7 +42,7 @@ public class ControllerManager : Singleton<ControllerManager>
             }
         }
 
-        if(controller.EgoMachine.UnitEgoContainers != null)
+        if (controller.EgoMachine.UnitEgoContainers != null)
         {
             foreach (var pair in controller.EgoMachine.UnitEgoContainers)
             {

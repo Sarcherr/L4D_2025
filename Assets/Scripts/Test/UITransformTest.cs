@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UITransformTest : MonoBehaviour
@@ -16,6 +14,6 @@ public class UITransformTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

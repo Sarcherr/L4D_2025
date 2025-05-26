@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
 /// 泛型单例类，使用时继承该类，然后使用Instance属性获取单例
 /// </summary>

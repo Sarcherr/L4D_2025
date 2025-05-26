@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,7 +29,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     protected override void Init()
     {
         BaseTurnQueue = new List<Turn>();
-        CurrentTurnQueue = new List<Turn>();     
+        CurrentTurnQueue = new List<Turn>();
     }
 
     /// <summary>
@@ -56,14 +55,14 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             {
                 if (BaseTurnQueue.Count == 0)
                 {
-                    BaseTurnQueue.Add(turn2Add);     
+                    BaseTurnQueue.Add(turn2Add);
                 }
                 else
                 {
                     for (int i = 0; i < BaseTurnQueue.Count; i++)
                     {
                         if (pair.Value.UnitEgo.Count > BaseTurnQueue[i].EgoValue)
-                        {          
+                        {
                             BaseTurnQueue.Insert(i, turn2Add);
                             break;
                         }
@@ -185,7 +184,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// <param name="targetQueue">目标回合序列</param>
     private void MoveTurn(List<(Turn turn, int index)> turnPairs, string targetQueue)
     {
-        if(targetQueue == "current")
+        if (targetQueue == "current")
         {
             foreach (var (turn, index) in turnPairs)
             {
@@ -211,7 +210,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         {
             foreach (var (turn, index) in turnPairs)
             {
-                if(!turn.IsExtraTurn)
+                if (!turn.IsExtraTurn)
                 {
                     BaseTurnQueue.RemoveAt(index);
                     for (int i = 0; i < BaseTurnQueue.Count; i++)

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UI.LevelUI.Controller
 {
@@ -15,7 +12,7 @@ namespace UI.LevelUI.Controller
         /// Ego槽容纳Ego
         /// </summary>
         public Ego ItemEgo { get; private set; }
-        
+
         // todo: Ego槽的刷新
         // todo: Ego槽的特定规则选取
     }
