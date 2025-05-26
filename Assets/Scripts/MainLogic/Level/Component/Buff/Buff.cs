@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Buff基类
 /// </summary>
-public class BuffBase
+public class Buff
 {
     public string Name;
     public string BelongName;

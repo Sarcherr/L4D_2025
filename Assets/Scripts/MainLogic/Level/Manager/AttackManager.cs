@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// 攻击管理器
@@ -50,6 +51,8 @@ public class AttackManager : Singleton<AttackManager>
         {
             return new Attack
             {
+                Origin = origin,
+                Target = target,
                 IsHit = false,
                 IsCrit = false,
                 IsResist = true,
@@ -68,6 +71,8 @@ public class AttackManager : Singleton<AttackManager>
 
             return new Attack
             {
+                Origin = origin,
+                Target = target,
                 IsHit = true,
                 IsCrit = crit,
                 IsResist = resist,
@@ -96,9 +101,50 @@ public class AttackManager : Singleton<AttackManager>
         }
         return new Heal
         {
+            Origin = origin,
+            Target = target,
             IsCrit = crit,
             HealValue = healValue
         };
+    }
+
+    /// <summary>
+    /// 处理攻击行为
+    /// </summary>
+    /// <param name="attack"></param>
+    public void HandleAttack(Attack attack)
+    {
+        // todo: UI效果  
+        // todo: 受击效果触发  
+
+        // 检测目标是否拥有怠惰(Laze)Ego  
+        var egoContainer = ControllerManager.Instance.AllEgoContainers[attack.Target];
+        var lazeEgo = egoContainer.UnitEgo.LastOrDefault(e => e.EgoType == "Laze");
+
+        if (!lazeEgo.Equals(default(Ego)))
+        {
+            // 若拥有将目标更改为Ego赋予者并消耗一点Ego(原目标UnitEgo中最后获得的此类型Ego)触发其效果  
+            attack.Target = lazeEgo.HostName;
+            egoContainer.RemoveEgo(new List<int> { egoContainer.UnitEgo.IndexOf(lazeEgo) });
+            egoContainer.EgoMachine.TriggerEgo(lazeEgo, "Consume");
+        }
+
+        // 处理攻击结果
+        var targetUnitData = ControllerManager.Instance.AllRuntimeUnitData[attack.Target];
+        targetUnitData.CurrentHealth -= attack.Damage;
+    }
+    /// <summary>
+    /// 处理治疗行为
+    /// </summary>
+    /// <param name="heal"></param>
+    public void HandleHeal(Heal heal)
+    {
+        // todo: UI效果
+        // todo: 受治疗效果触发
+
+        // 处理治疗结果
+        var targetUnitData = ControllerManager.Instance.AllRuntimeUnitData[heal.Target];
+        targetUnitData.CurrentHealth += heal.HealValue;
     }
 
     /// <summary>
@@ -166,6 +212,15 @@ public class AttackExecutor
 public struct Attack
 {
     /// <summary>
+    /// 发起者名称
+    /// </summary>
+    public string Origin;
+    /// <summary>
+    /// 目标名称
+    /// </summary>
+    public string Target;
+
+    /// <summary>
     /// 是否命中
     /// </summary>
     public bool IsHit;
@@ -188,6 +243,15 @@ public struct Attack
 /// </summary>
 public struct Heal
 {
+    /// <summary>
+    /// 发起者名称
+    /// </summary>
+    public string Origin;
+    /// <summary>
+    /// 目标名称
+    /// </summary>
+    public string Target;
+
     /// <summary>
     /// 是否暴击
     /// </summary>
