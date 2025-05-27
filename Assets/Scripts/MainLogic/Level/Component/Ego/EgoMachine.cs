@@ -53,6 +53,7 @@ public class EgoMachine
 
     /// <summary>
     /// 触发Ego特效
+    /// <para>爆发Burst/失控OutOfControl/消耗Consume</para>
     /// </summary>
     /// <param name="ego">对应Ego</param>
     /// <param name="triggerType">触发类型(爆发Burst/失控OutOfControl/消耗Consume)</param>
@@ -61,6 +62,9 @@ public class EgoMachine
         EgoExecutor.ExecuteEgo(ego, triggerType);
     }
 }
+
+// Attention: 记得修改
+// todo: 更改触发Ego效果的逻辑，不再是逐个触发，而是通过EgoExecutor统一处理单次生效内所有Ego的触发逻辑
 
 /// <summary>
 /// Ego特效执行器
@@ -73,15 +77,45 @@ public class EgoExecutor
     {
         // todo:初始化注册所有Ego行为对应的方法
         // ps. 方法格式统一为void MethodName(Ego ego, string triggerType)
+        //      方法名称为"EgoType" + "Method"
+        // 使用反射自动注册所有方法
+        var methods = 
+            GetType().GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        foreach (var method in methods)
+        {
+            if (method.ReturnType == typeof(void) && method.GetParameters().Length == 2 &&
+                method.GetParameters()[0].ParameterType == typeof(Ego) &&
+                method.GetParameters()[1].ParameterType == typeof(string))
+            {
+                EgoActions[method.Name] =
+                    (Action<Ego, string>)Delegate.CreateDelegate(typeof(Action<Ego, string>), this, method);
+            }
+        }
     }
 
     public void ExecuteEgo(Ego ego, string triggerType)
     {
-        if (EgoActions.TryGetValue(ego.EgoType, out var action))
+        // 字典索引为"EgoType" + "Method"
+        string methodName = ego.EgoType + "Method";
+        if (EgoActions.TryGetValue(methodName, out var action))
         {
             action.Invoke(ego, triggerType);
         }
+        else
+        {
+            throw new Exception($"Ego action '{methodName}' not found.");
+        }
     }
 
+    /// <summary>
+    /// 愤怒Ego
+    /// <para>该ego不可被消耗，可以被转移。当持有者触发情感爆发状态时，每点ego提供10%的攻击力加成与5%的暴击率加成</para>
+    /// <para>持有者失控时，每点愤怒ego会对人物产生一次等于当前攻击力的伤害，然后消耗自身</para>
+    /// </summary>
+    /// <param name="ego"></param>
+    /// <param name="triggerType"></param>
+    public void AngerMethod(Ego ego, string triggerType)
+    {
 
+    }
 }

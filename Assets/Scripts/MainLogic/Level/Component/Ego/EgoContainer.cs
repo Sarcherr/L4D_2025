@@ -278,6 +278,30 @@ public class EgoContainer
 
     /// <summary>
     /// 消耗Ego
+    /// <para>自由选择；在选中方法确定ID后才进行操作</para>  
+    /// </summary>
+    /// <param name="consumeIDs">待消耗Ego编号</param>
+    /// <returns>消耗Ego列表</returns>
+    public List<Ego> ConsumeEgo(List<int> consumeIDs)
+    {
+        List<Ego> consumeEgos = new();
+        // 对待消耗的ID进行排序，确保从大到小移除，避免索引偏移问题  
+        consumeIDs.Sort((a, b) => b.CompareTo(a));
+
+        foreach (int i in consumeIDs)
+        {
+            if (UnitEgo[i].CanConsume)
+            {
+                consumeEgos.Add(UnitEgo[i]);
+                EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                UnitEgo.RemoveAt(i);
+            }
+        }
+        return consumeEgos;
+    }
+    /// <summary>
+    /// 消耗Ego
+    /// <para>指定数量从Ego条尾部/头部顺序消耗</para>
     /// </summary>
     /// <param name="consumeCount">待消耗Ego数量</param>
     /// <param name="beginFromEnd">是否从尾部开始</param>

@@ -90,7 +90,7 @@ public class AttackManager : Singleton<AttackManager>
     /// <param name="target">目标</param>
     /// <param name="healRate">技能治疗倍率</param>
     /// <returns>治疗结果</returns>
-    public Heal Heal(string origin, string target, float healRate)
+    public Heal GetHeal(string origin, string target, float healRate)
     {
         RuntimeUnitData originUnitData = ControllerManager.Instance.AllRuntimeUnitData[origin];
 
@@ -231,7 +231,7 @@ public class AttackExecutor
     /// <para>对敌方单体造成一次倍率150%的伤害，命中后获得一点“愤怒ego”若暴击，获得量*3</para>
     /// </summary>
     /// <param name="request"></param>
-    public void Holy_Strike(AttackRequest request)
+    public void Holy_strike(AttackRequest request)
     {
         foreach (var target in request.Target)
         {
@@ -263,6 +263,56 @@ public class AttackExecutor
         }
     }
 
+    /// <summary>
+    /// 德劳拉-一颗葡萄
+    /// <para>选择自身一点带有特殊效果的ego将其消耗，回复自身一次倍率50%的血量（可以暴击）</para>
+    /// </summary>
+    /// <param name="request"></param>
+    public void Eat_grape(AttackRequest request)
+    {
+        Heal healResult = AttackManager.Instance.GetHeal(request.Origin, request.Origin, 0.5f);
+    }
+
+    /// <summary>
+    /// 德劳拉-未竟誓言
+    /// <para>对随机两名敌人造成一次100%倍率的伤害，每命中一个敌人就将自身最后获得的1点ego上附加愤怒ego（依次往前附加）</para>
+    /// </summary>
+    public void Oaths(AttackRequest request)
+    {
+        // 目标直接从ControllerManager获取
+        // 随机取两名目标，若少于两名则取全部
+        var targets = ControllerManager.Instance.AllRuntimeUnitData.Values
+            .Where(u => u.UnitKind == "Enemy" && u.Name != request.Origin)
+            .OrderBy(_ => AttackManager.Instance.Random.Next())
+            .Take(2)
+            .Select(u => u.Name)
+            .ToList();
+
+        int hitNum = 0;
+        foreach(var target in targets)
+        {
+            Attack attackResult = AttackManager.Instance.GetAttack(request.Origin, target, 1f);
+            if (attackResult.IsHit)
+            {
+                hitNum++;
+            }
+        }
+
+        if(hitNum > 0)
+        {
+            // 获取攻击者Ego容器
+            var egoContainer = ControllerManager.Instance.AllEgoContainers[request.Origin];
+            // 创建愤怒Ego
+            Ego angerEgo = new Ego
+            {
+                EgoType = "Anger",
+                HostName = request.Origin,
+                CanConsume = false,
+            };
+            // 附加愤怒Ego
+            egoContainer.AttachEgo(hitNum, true, angerEgo, out _);
+        }
+    }
 }
 
 /// <summary>
