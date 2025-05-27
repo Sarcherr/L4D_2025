@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SkillManager : Singleton<SkillManager>
 {
@@ -14,7 +15,7 @@ public class SkillManager : Singleton<SkillManager>
     /// <param name="request"></param>
     public void HandleRequest(SkillRequest request)
     {
-
+        SkillExecutor.ExecuteSkill(request);
     }
 }
 
@@ -45,6 +46,31 @@ public class SkillExecutor
         if (SkillActions.TryGetValue(request.Name, out var action))
         {
             action.Invoke(request);
+        }
+    }
+
+    /// <summary>
+    /// 德劳拉-我的审判
+    /// <para>将自身所有的特殊ego转移到指定人物身上（包括敌人）</para>
+    /// </summary>
+    /// <param name="request"></param>
+    public void Trial(SkillRequest request)
+    {
+        var originContainer = ControllerManager.Instance.AllEgoContainers[request.Origin];
+        var targetContainer = ControllerManager.Instance.AllEgoContainers[request.Target.FirstOrDefault()];
+
+        // 使用Linq获取自身EgoContainer中所有特殊Ego的索引(即EgoType不为"Normal")  
+        var specialEgoIDs = originContainer.UnitEgo
+            .Select((ego, index) => new { ego, index })
+            .Where(x => x.ego.EgoType != "Normal")
+            .Select(x => x.index)
+            .ToList();
+
+        // 将specialEgos转移到targetContainer  
+        if (targetContainer != null)
+        {
+            var egos = originContainer.RemoveEgo(specialEgoIDs);
+            targetContainer.GainEgo(egos);
         }
     }
 }

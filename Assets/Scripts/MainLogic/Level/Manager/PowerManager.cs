@@ -72,6 +72,9 @@ public struct AttackRequest
     public List<Ego> EgoComsumption;
 }
 
+/// <summary>
+/// 技能请求容器
+/// </summary>
 public struct SkillRequest
 {
     /// <summary>
