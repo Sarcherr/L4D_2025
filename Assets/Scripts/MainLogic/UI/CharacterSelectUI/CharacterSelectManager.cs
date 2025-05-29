@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSelectManager : Singleton<CharacterSelectManager>
 {
     /// <summary>
-    /// ±»Ñ¡ÔñµÄÍæ¼Òµ¥Î»ÁĞ±í
+    /// è¢«é€‰æ‹©çš„ç©å®¶å•ä½åˆ—è¡¨
     /// </summary>
     public List<string> SelectedCharacters = new List<string>();
 
     /// <summary>
-    /// Êä³öµ±Ç°Ñ¡ÔñµÄ½ÇÉ«£¬±ãÓÚºóĞø¼ì²é
+    /// è¾“å‡ºå½“å‰é€‰æ‹©çš„è§’è‰²ï¼Œä¾¿äºåç»­æ£€æŸ¥
     /// </summary>
     public void CheckSelectedCharacters()
     {
@@ -20,9 +19,9 @@ public class CharacterSelectManager : Singleton<CharacterSelectManager>
         {
             allSelectedCharacters += character + ", ";
         }
-        
+
         Debug.Log("current selected characters:" + allSelectedCharacters);
     }
-    
-    
+
+
 }

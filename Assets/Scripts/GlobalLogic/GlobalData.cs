@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Data;
 using System.IO;
 using System.Linq;
-using System.Data;
+using UnityEngine;
 
 public static class GlobalData
 {
@@ -205,6 +204,9 @@ public static class GlobalData
             string name = br.ReadString();
             string name_CN = br.ReadString();
             int limit = int.Parse(br.ReadString());
+            int egoConsumption = int.Parse(br.ReadString());
+            string uiControlKind = br.ReadString();
+            string description = br.ReadString();
 
             PowerData powerData = new PowerData()
             {
@@ -212,6 +214,9 @@ public static class GlobalData
                 name_CN = name_CN,
                 belongName = belongName,
                 limit = limit,
+                egoConsumption = egoConsumption,
+                uiControlKind = uiControlKind,
+                description = description
             };
             if (!PowerDataDic.TryAdd(powerData.name, powerData))
             {

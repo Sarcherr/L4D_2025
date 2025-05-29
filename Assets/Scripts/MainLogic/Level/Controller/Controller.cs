@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,12 +13,29 @@ public class Controller : IController
 
     public EgoMachine EgoMachine { get; set; }
 
+    /// <summary>
+    /// 行动力(初始默认为1)
+    /// <para>为零时高亮结束回合按钮(todo)</para>
+    /// </summary>
+    public int ActionPoint
+    {
+        get => ActionPoint;
+        set
+        {
+            ActionPoint = value;
+            if (ActionPoint <= 0)
+            {
+                // todo: 高亮结束回合按钮
+            }
+        }
+    }
+
     public Controller(string controllerKind, List<RuntimeUnitData> runtimeUnitDatas)
     {
         CotrollerKind = controllerKind;
         RuntimeUnits = new Dictionary<string, RuntimeUnitData>();
 
-        if(runtimeUnitDatas != null)
+        if (runtimeUnitDatas != null)
         {
             foreach (var unitData in runtimeUnitDatas)
             {
@@ -38,24 +54,40 @@ public class Controller : IController
     public void SwitchUnit(string unitName)
     {
         CurrentUnit = unitName;
+        Debug.Log($"Switch to unit {CurrentUnit}");
+        // 重置行动力
+        ActionPoint = 1;
+        OnTurnStart();
     }
-
     /// <summary>
     /// 发动能力
     /// </summary>
     /// <param name="power">能力名称</param>
     public void Power(string power)
     {
-        Debug.Log($"Unit {CurrentUnit} use power {power}");
-
-        PowerRequest request = new PowerRequest()
+        if(ActionPoint > 0)
         {
-            Name = power,
-            Origin = CurrentUnit,
-            UnitKind = RuntimeUnits[CurrentUnit].UnitKind
-        };
+            Debug.Log($"Unit {CurrentUnit} use power {power}");
 
-        PowerManager.Instance.HandleRequest(request);
+            PowerRequest request = new PowerRequest()
+            {
+                Name = power,
+                Origin = CurrentUnit,
+                UnitKind = RuntimeUnits[CurrentUnit].UnitKind
+            };
+
+            PowerManager.Instance.HandleRequest(request);
+        }
+    }
+    /// <summary>
+    /// 结束当前单位的回合
+    /// </summary>
+    public void EndTurn()
+    {
+        Debug.Log($"End turn for unit {CurrentUnit} with {ActionPoint} action points left.");
+        ActionPoint = 0;
+        OnTurnEnd();
+        TurnManager.Instance.NextTurn();
     }
 
     /// <summary>
@@ -65,14 +97,12 @@ public class Controller : IController
     {
         EgoMachine.RecoverEgo();
     }
-
     public void OnTurnStart()
     {
-        
-    }
 
+    }
     public void OnTurnEnd()
     {
-
+        
     }
 }

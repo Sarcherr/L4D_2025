@@ -1,6 +1,3 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +15,7 @@ public class BattleManager : Singleton<BattleManager>
 
         // 以string索引从GlobalData.RuntimeUnitDataDic中获取单位数据
         List<RuntimeUnitData> playerUnitData = new List<RuntimeUnitData>();
-        if(playerUnits != null )
+        if (playerUnits != null)
         {
             foreach (string unitName in playerUnits)
             {
@@ -36,7 +33,7 @@ public class BattleManager : Singleton<BattleManager>
         Controller player = new Controller("Player", playerUnitData);
 
         List<RuntimeUnitData> enemyUnitData = new List<RuntimeUnitData>();
-        if(enemyUnits != null)
+        if (enemyUnits != null)
         {
             foreach (string unitName in enemyUnits)
             {

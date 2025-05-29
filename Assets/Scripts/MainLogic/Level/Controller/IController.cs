@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using UnityEngine;
 
 public interface IController
 {
@@ -25,6 +22,8 @@ public interface IController
     /// Ego组件
     /// </summary>
     public EgoMachine EgoMachine { get; set; }
+    public int ActionPoint { get; set; }
     public void SwitchUnit(string unitName);
     public void Power(string power);
+    public void EndTurn();
 }

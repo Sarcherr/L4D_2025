@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using MainLogic.UI.LevelSelectUI;
-using UnityEngine;
 using UI.LevelUI.Controller;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
@@ -162,6 +161,8 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    // todo: 带单位名称参数的刷新技能按钮方法
+
     /// <summary>
     /// 向PowerManager发送UI消息
     /// </summary>
@@ -170,8 +171,8 @@ public class UIManager : Singleton<UIManager>
         PowerManager.Instance.GeneratePower(message);
     }
 
-    #endregion 
-    
+    #endregion
+
     #region UI_CharacterSelect
 
     public void RefreshCharacterSelectButton()
@@ -179,23 +180,22 @@ public class UIManager : Singleton<UIManager>
         // 清空已选择的角色列表
         CharacterSelectManager.Instance.SelectedCharacters.Clear();
 
-        Dictionary<int,Button> characterSelectButtons = new Dictionary<int,Button>();
-        
+        Dictionary<int, Button> characterSelectButtons = new Dictionary<int, Button>();
+
         foreach (var button in ButtonsDic["CharacterSelectUI.CharacterSelectButton"])
         {
-            characterSelectButtons.Add(button.GetComponent<CharacterSelectButton>().CharacterID,button);
+            characterSelectButtons.Add(button.GetComponent<CharacterSelectButton>().CharacterID, button);
         }
         
         int buttonIndex = 1;
         foreach (var pair in GlobalData.RuntimeUnitDataDic)
         {
-             characterSelectButtons[buttonIndex].GetComponent<CharacterSelectButton>().Refresh(pair.Key);
-             buttonIndex++;
+            characterSelectButtons[buttonIndex].GetComponent<CharacterSelectButton>().Refresh(pair.Key);
+            buttonIndex++;
         }
     }
-    
-    #endregion
-    
+
+    #endregion    
     #region UI_LevelSelect
 
     public void RefreshLevelSelectButton()

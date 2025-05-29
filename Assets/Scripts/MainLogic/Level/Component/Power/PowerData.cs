@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public struct PowerData
 {
     /// <summary>
@@ -24,6 +20,10 @@ public struct PowerData
     /// Ego消耗
     /// </summary>
     public int egoConsumption;
+    /// <summary>
+    /// UI操作类型
+    /// </summary>
+    public string uiControlKind;
     /// <summary>
     /// 技能描述
     /// </summary>

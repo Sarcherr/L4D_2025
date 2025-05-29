@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 能力管理器
@@ -22,7 +20,11 @@ public class PowerManager : Singleton<PowerManager>
     /// </summary>
     public void GeneratePower(UIPowerMessage message)
     {
+        // 行动力消耗
+        ControllerManager.Instance.CurrentController.ActionPoint--;
+
         // todo:生成能力
+        // todo:Ego消耗
         // todo:生成攻击与技能请求，发送给AttackManager与SkillManager
     }
 }
@@ -73,6 +75,9 @@ public struct AttackRequest
     public List<Ego> EgoComsumption;
 }
 
+/// <summary>
+/// 技能请求容器
+/// </summary>
 public struct SkillRequest
 {
     /// <summary>

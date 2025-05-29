@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ControllerManager : Singleton<ControllerManager>
 {
@@ -21,6 +18,14 @@ public class ControllerManager : Singleton<ControllerManager>
     /// 储存全局EgoContainer索引
     /// </summary>
     public Dictionary<string, EgoContainer> AllEgoContainers = new();
+    /// <summary>
+    /// 当前行动单位数据(全局)
+    /// </summary>
+    public RuntimeUnitData CurrentUnit;
+    /// <summary>
+    /// 当前行动单位所属控制器(全局)
+    /// </summary>
+    public IController CurrentController;
 
     /// <summary>
     /// 注册控制器
@@ -37,7 +42,7 @@ public class ControllerManager : Singleton<ControllerManager>
             Enemy = controller;
         }
 
-        if(controller.RuntimeUnits != null)
+        if (controller.RuntimeUnits != null)
         {
             foreach (var pair in controller.RuntimeUnits)
             {
@@ -45,7 +50,7 @@ public class ControllerManager : Singleton<ControllerManager>
             }
         }
 
-        if(controller.EgoMachine.UnitEgoContainers != null)
+        if (controller.EgoMachine.UnitEgoContainers != null)
         {
             foreach (var pair in controller.EgoMachine.UnitEgoContainers)
             {
@@ -60,13 +65,28 @@ public class ControllerManager : Singleton<ControllerManager>
     /// <param name="name"></param>
     public void SwitchUnit(string name)
     {
-        if (AllRuntimeUnitData[name].UnitKind == "Player")
+        var unitData = AllRuntimeUnitData[name];
+
+        if (unitData.UnitKind == "Player")
         {
             Player.SwitchUnit(name);
+            CurrentController = Player;
         }
-        else if (AllRuntimeUnitData[name].UnitKind == "Enemy")
+        else if (unitData.UnitKind == "Enemy")
         {
             Enemy.SwitchUnit(name);
+            CurrentController = Enemy;
         }
+
+        CurrentUnit = unitData;
+    }
+
+    /// <summary>
+    /// 大回合开始时Ego恢复
+    /// </summary>
+    public void RecoverEgo()
+    {
+        Player.EgoMachine.RecoverEgo();
+        Enemy.EgoMachine.RecoverEgo();
     }
 }

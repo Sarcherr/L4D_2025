@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSelectTest : MonoBehaviour
@@ -9,5 +7,5 @@ public class CharacterSelectTest : MonoBehaviour
         UIManager.Instance.RefreshCharacterSelectButton();
     }
 
-    
+
 }

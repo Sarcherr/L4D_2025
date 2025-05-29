@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,38 +50,91 @@ public class RuntimeUnitData
     /// </summary>
     public bool IsOutOfControl;
 
-    /// <summary>
-    /// 当前生命值
-    /// </summary>
-    public int CurrentHealth;
+
+    /// <summary>  
+    /// 当前生命值  
+    /// </summary>  
+    public int CurrentHealth
+    {
+        get => Mathf.Max(CurrentHealth, 0);
+        set
+        {
+            CurrentHealth = Mathf.Max(value, 0);
+            if (CurrentHealth <= 0)
+            {
+                // todo: 触发死亡事件的具体实现  
+            }
+        }
+    }
     /// <summary>
     /// 当前攻击力
     /// </summary>
-    public int CurrentAttack;
+    public int CurrentAttack
+    {         
+        // 数值不小于0
+        get => Mathf.Max(CurrentAttack, 0);
+        set => CurrentAttack = Mathf.Max(value, 0);
+    }
     /// <summary>
     /// 当前命中率
     /// </summary>
-    public float CurrentHitChance;
+    public float CurrentHitChance
+    {
+        // 范围限制在0到1之间
+        get => Mathf.Clamp(CurrentHitChance, 0f, 1f);
+        set => CurrentHitChance = Mathf.Clamp(value, 0f, 1f);
+    }
     /// <summary>
     /// 当前闪避率
     /// </summary>
-    public float CurrentDogeChance;
+    public float CurrentDogeChance
+    {
+        // 范围限制在0到1之间
+        get => Mathf.Clamp(CurrentDogeChance, 0f, 1f);
+        set => CurrentDogeChance = Mathf.Clamp(value, 0f, 1f);
+    }
+
     /// <summary>
     /// 当前暴击率
     /// </summary>
-    public float CurrentCritChance;
+    public float CurrentCritChance
+    {
+        // 范围限制在0到1之间
+        get => Mathf.Clamp(CurrentCritChance, 0f, 1f);
+        set => CurrentCritChance = Mathf.Clamp(value, 0f, 1f);
+    }
     /// <summary>
     /// 当前暴击倍率
     /// </summary>
-    public float CurrentCritRate;
+    public float CurrentCritRate
+    {
+        // 数值不小于0
+        get => Mathf.Max(CurrentCritRate, 0f);
+        set => CurrentCritRate = Mathf.Max(value, 0f);
+    }
     /// <summary>
     /// 当前抵抗率
     /// </summary>
-    public float CurrentResistanceRate;
+    public float CurrentResistanceChance
+    {
+        // 范围限制在0到1之间
+        get => Mathf.Clamp(CurrentResistanceChance, 0f, 1f);
+        set => CurrentResistanceChance = Mathf.Clamp(value, 0f, 1f);
+    }
     /// <summary>
     /// 当前减伤率
     /// </summary>
-    public float CurrentDamageReductionRate;
+    public float CurrentDamageReductionRate
+    {
+        // 范围限制在0到1之间
+        get => Mathf.Clamp(CurrentDamageReductionRate, 0f, 1f);
+        set => CurrentDamageReductionRate = Mathf.Clamp(value, 0f, 1f);
+    }
+
+    /// <summary>
+    /// 当前攻击加成
+    /// </summary>
+    public float CurrentExtraAttackRate;
 
     /// <summary>
     /// 复制UnitData数据
@@ -107,8 +160,10 @@ public class RuntimeUnitData
         CurrentDogeChance = unitData.DogeChance;
         CurrentCritChance = unitData.CritChance;
         CurrentCritRate = unitData.CritRate;
-        CurrentResistanceRate = unitData.ResistanceRate;
+        CurrentResistanceChance = unitData.ResistanceRate;
         CurrentDamageReductionRate = unitData.DamageReductionRate;
+
+        CurrentExtraAttackRate = 0f;
         IsBurst = false;
         IsOutOfControl = false;
     }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleTest : MonoBehaviour
@@ -15,6 +13,6 @@ public class BattleTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

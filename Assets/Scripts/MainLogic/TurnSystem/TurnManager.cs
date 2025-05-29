@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,12 +24,22 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// <summary>
     /// 当前总回合数(从1开始)
     /// </summary>
-    public int CurrentGeneralTurn { get; set; }
+    public int CurrentGeneralTurn
+    {
+        get => CurrentGeneralTurn;
+        set
+        {
+            // 总回合被修改说明大回合结束/开始
+            // 自动触发一次Ego恢复
+            CurrentGeneralTurn = value;
+            ControllerManager.Instance.RecoverEgo();
+        }
+    }
 
     protected override void Init()
     {
         BaseTurnQueue = new List<Turn>();
-        CurrentTurnQueue = new List<Turn>();     
+        CurrentTurnQueue = new List<Turn>();
     }
 
     /// <summary>
@@ -56,14 +65,14 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             {
                 if (BaseTurnQueue.Count == 0)
                 {
-                    BaseTurnQueue.Add(turn2Add);     
+                    BaseTurnQueue.Add(turn2Add);
                 }
                 else
                 {
                     for (int i = 0; i < BaseTurnQueue.Count; i++)
                     {
                         if (pair.Value.UnitEgo.Count > BaseTurnQueue[i].EgoValue)
-                        {          
+                        {
                             BaseTurnQueue.Insert(i, turn2Add);
                             break;
                         }
@@ -185,7 +194,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// <param name="targetQueue">目标回合序列</param>
     private void MoveTurn(List<(Turn turn, int index)> turnPairs, string targetQueue)
     {
-        if(targetQueue == "current")
+        if (targetQueue == "current")
         {
             foreach (var (turn, index) in turnPairs)
             {
@@ -211,7 +220,7 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         {
             foreach (var (turn, index) in turnPairs)
             {
-                if(!turn.IsExtraTurn)
+                if (!turn.IsExtraTurn)
                 {
                     BaseTurnQueue.RemoveAt(index);
                     for (int i = 0; i < BaseTurnQueue.Count; i++)

@@ -1,8 +1,4 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EgoContainer
 {
@@ -42,11 +38,11 @@ public class EgoContainer
     {
         foreach (var ego in egoList)
         {
-            if(egoList.Count == EgoThreshold + 1)
+            if (egoList.Count == EgoThreshold + 1)
             {
                 OnEgoBurst();
             }
-            else if(egoList.Count > EgoLimit)
+            else if (egoList.Count > EgoLimit)
             {
                 OnEgoOutOfControl();
                 break;
@@ -66,24 +62,29 @@ public class EgoContainer
 
         return removedEgos;
     }
-    /// <summary>
-    /// 移除Ego
-    /// <para>自由选择；在选中方法确定ID后才进行操作</para>
-    /// </summary>
-    /// <param name="removeIDs">待移除Ego编号</param>
-    /// <returns>本次移除的Ego列表</returns>
+    /// <summary>  
+    /// 移除Ego  
+    /// <para>自由选择；在选中方法确定ID后才进行操作</para>  
+    /// </summary>  
+    /// <param name="removeIDs">待移除Ego编号</param>  
+    /// <returns>本次移除的Ego列表</returns>  
     public List<Ego> RemoveEgo(List<int> removeIDs)
     {
         List<Ego> removedEgos = new();
-        foreach(var num in removeIDs)
+        // 对待移除的ID进行排序，确保从大到小移除，避免索引偏移问题  
+        removeIDs.Sort((a, b) => b.CompareTo(a));
+
+        foreach (var num in removeIDs)
+
         {
-            if(UnitEgo.Count == EgoThreshold)
+            if (UnitEgo.Count == EgoThreshold)
             {
                 OnEgoBelowThreshold();
             }
             removedEgos.Add(UnitEgo[num]);
             UnitEgo.RemoveAt(num);
-        }    
+        }
+
         return removedEgos;
     }
     /// <summary>
@@ -98,9 +99,9 @@ public class EgoContainer
     {
         removeEgos = new();
 
-        if(UnitEgo.Count >= removeCount)
+        if (UnitEgo.Count >= removeCount)
         {
-            if(beginFromEnd)
+            if (beginFromEnd)
             {
                 for (int i = 0; i < removeCount; i++)
                 {
@@ -278,6 +279,30 @@ public class EgoContainer
 
     /// <summary>
     /// 消耗Ego
+    /// <para>自由选择；在选中方法确定ID后才进行操作</para>  
+    /// </summary>
+    /// <param name="consumeIDs">待消耗Ego编号</param>
+    /// <returns>消耗Ego列表</returns>
+    public List<Ego> ConsumeEgo(List<int> consumeIDs)
+    {
+        List<Ego> consumeEgos = new();
+        // 对待消耗的ID进行排序，确保从大到小移除，避免索引偏移问题  
+        consumeIDs.Sort((a, b) => b.CompareTo(a));
+
+        foreach (int i in consumeIDs)
+        {
+            if (UnitEgo[i].CanConsume)
+            {
+                consumeEgos.Add(UnitEgo[i]);
+                EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                UnitEgo.RemoveAt(i);
+            }
+        }
+        return consumeEgos;
+    }
+    /// <summary>
+    /// 消耗Ego
+    /// <para>指定数量从Ego条尾部/头部顺序消耗</para>
     /// </summary>
     /// <param name="consumeCount">待消耗Ego数量</param>
     /// <param name="beginFromEnd">是否从尾部开始</param>
@@ -285,23 +310,87 @@ public class EgoContainer
     /// <returns>是否成功消耗(待消耗数量是否超过当前数量)</returns>
     public bool ConsumeEgo(int consumeCount, bool beginFromEnd, out List<Ego> consumeEgos)
     {
-        // 触发Ego消耗特效
-        if (beginFromEnd)
+        consumeEgos = new();
+        List<int> ego2RemoveIDs = new();
+        int cannotConsumeCount = UnitEgo.FindAll(x => x.CanConsume == false).Count;
+        // 注意判断时除去不能消耗的Ego数量
+        if (UnitEgo.Count - cannotConsumeCount >= consumeCount)
         {
-            for (int i = 0; i < consumeCount; i++)
+            if (beginFromEnd)
             {
-                EgoMachine.TriggerEgo(UnitEgo[UnitEgo.Count - 1 - i], "Consume");
+                for (int i = 0; i < consumeCount; i++)
+                {
+                    if (UnitEgo[UnitEgo.Count - 1 - i].CanConsume)
+                    {
+                        ego2RemoveIDs.Add(UnitEgo.Count - 1 - i);
+                        EgoMachine.TriggerEgo(UnitEgo[UnitEgo.Count - 1 - i], "Consume");
+                    }
+                }
             }
-        }
-        else
-        {
-            for (int i = 0; i < consumeCount; i++)
+            else
             {
-                EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                for (int i = 0; i < consumeCount; i++)
+                {
+                    if (UnitEgo[i].CanConsume)
+                    {
+                        ego2RemoveIDs.Add(i);
+                        EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                    }
+                }
             }
+
+            consumeEgos = RemoveEgo(ego2RemoveIDs);
+            return true;
         }
 
-        return RemoveEgo(consumeCount, beginFromEnd, out consumeEgos);
+        return false;
+    }
+    /// <summary>  
+    /// 消耗Ego  
+    /// <para>指定数量优先消耗指定类型的Ego，默认从末尾开始</para>  
+    /// </summary>  
+    /// <param name="consumeCount">待消耗Ego数量</param>  
+    /// <param name="priorEgoType">优先消耗的Ego类型</param>  
+    /// <param name="consumeEgos">被消耗的Ego列表</param>  
+    /// <returns>是否成功消耗(待消耗数量是否超过当前数量)</returns>  
+    public bool ConsumeEgo(int consumeCount, string priorEgoType, out List<Ego> consumeEgos)
+    {
+        consumeEgos = new();
+        List<int> ego2RemoveIDs = new();
+        int cannotConsumeCount = UnitEgo.FindAll(x => x.CanConsume == false).Count;
+
+        // 注意判断时除去不能消耗的Ego数量  
+        if (UnitEgo.Count - cannotConsumeCount >= consumeCount)
+        {
+            int consumed = 0;
+
+            // 优先消耗指定类型的Ego  
+            for (int i = UnitEgo.Count - 1; i >= 0 && consumed < consumeCount; i--)
+            {
+                if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType == priorEgoType)
+                {
+                    ego2RemoveIDs.Add(i);
+                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                    consumed++;
+                }
+            }
+
+            // 如果优先类型不足，继续消耗其他类型的Ego  
+            for (int i = UnitEgo.Count - 1; i >= 0 && consumed < consumeCount; i--)
+            {
+                if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType != priorEgoType)
+                {
+                    ego2RemoveIDs.Add(i);
+                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                    consumed++;
+                }
+            }
+
+            consumeEgos = RemoveEgo(ego2RemoveIDs);
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
