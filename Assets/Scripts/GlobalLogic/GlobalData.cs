@@ -225,6 +225,7 @@ public static class GlobalData
             else
             {
                 Debug.Log($"PowerData: {powerData.name} added");
+                Debug.Log($"Name_CN: {powerData.name_CN}, BelongName: {powerData.belongName}, Limit: {powerData.limit}, EgoConsumption: {powerData.egoConsumption}, UIControlKind: {powerData.uiControlKind}");
             }
         }
     }

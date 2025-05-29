@@ -65,20 +65,23 @@ public class ControllerManager : Singleton<ControllerManager>
     /// <param name="name"></param>
     public void SwitchUnit(string name)
     {
-        var unitData = AllRuntimeUnitData[name];
-
-        if (unitData.UnitKind == "Player")
+        if (name != "End")
         {
-            Player.SwitchUnit(name);
-            CurrentController = Player;
-        }
-        else if (unitData.UnitKind == "Enemy")
-        {
-            Enemy.SwitchUnit(name);
-            CurrentController = Enemy;
-        }
+            var unitData = AllRuntimeUnitData[name];
 
-        CurrentUnit = unitData;
+            if (unitData.UnitKind == "Player")
+            {
+                Player.SwitchUnit(name);
+                CurrentController = Player;
+            }
+            else if (unitData.UnitKind == "Enemy")
+            {
+                Enemy.SwitchUnit(name);
+                CurrentController = Enemy;
+            }
+
+            CurrentUnit = unitData;
+        }
     }
 
     /// <summary>

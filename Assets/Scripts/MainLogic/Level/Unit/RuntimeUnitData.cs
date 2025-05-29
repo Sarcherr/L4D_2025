@@ -50,17 +50,17 @@ public class RuntimeUnitData
     /// </summary>
     public bool IsOutOfControl;
 
-
+    private int _currentHealth;
     /// <summary>  
     /// 当前生命值  
     /// </summary>  
     public int CurrentHealth
     {
-        get => Mathf.Max(CurrentHealth, 0);
+        get => Mathf.Max(_currentHealth, 0);
         set
         {
-            CurrentHealth = Mathf.Max(value, 0);
-            if (CurrentHealth <= 0)
+            _currentHealth = Mathf.Max(value, 0);
+            if (_currentHealth <= 0)
             {
                 // todo: 触发死亡事件的具体实现  
             }
@@ -69,66 +69,71 @@ public class RuntimeUnitData
     /// <summary>
     /// 当前攻击力
     /// </summary>
+    private int _currentAttack;
     public int CurrentAttack
-    {         
-        // 数值不小于0
-        get => Mathf.Max(CurrentAttack, 0);
-        set => CurrentAttack = Mathf.Max(value, 0);
+    {
+        get => Mathf.Max(_currentAttack, 0);
+        set => _currentAttack = Mathf.Max(value, 0);
     }
+
+    private float _currentHitChance;
     /// <summary>
     /// 当前命中率
     /// </summary>
     public float CurrentHitChance
     {
-        // 范围限制在0到1之间
-        get => Mathf.Clamp(CurrentHitChance, 0f, 1f);
-        set => CurrentHitChance = Mathf.Clamp(value, 0f, 1f);
+        get => Mathf.Clamp(_currentHitChance, 0f, 1f);
+        set => _currentHitChance = Mathf.Clamp(value, 0f, 1f);
     }
+
+    private float _currentDogeChance;
     /// <summary>
     /// 当前闪避率
     /// </summary>
     public float CurrentDogeChance
     {
-        // 范围限制在0到1之间
-        get => Mathf.Clamp(CurrentDogeChance, 0f, 1f);
-        set => CurrentDogeChance = Mathf.Clamp(value, 0f, 1f);
+        get => Mathf.Clamp(_currentDogeChance, 0f, 1f);
+        set => _currentDogeChance = Mathf.Clamp(value, 0f, 1f);
     }
 
+    private float _currentCritChance;
     /// <summary>
     /// 当前暴击率
     /// </summary>
     public float CurrentCritChance
     {
-        // 范围限制在0到1之间
-        get => Mathf.Clamp(CurrentCritChance, 0f, 1f);
-        set => CurrentCritChance = Mathf.Clamp(value, 0f, 1f);
+        get => Mathf.Clamp(_currentCritChance, 0f, 1f);
+        set => _currentCritChance = Mathf.Clamp(value, 0f, 1f);
     }
+
+    private float _currentCritRate;
     /// <summary>
     /// 当前暴击倍率
     /// </summary>
     public float CurrentCritRate
     {
-        // 数值不小于0
-        get => Mathf.Max(CurrentCritRate, 0f);
-        set => CurrentCritRate = Mathf.Max(value, 0f);
+        get => Mathf.Max(_currentCritRate, 0f);
+        set => _currentCritRate = Mathf.Max(value, 0f);
     }
+
+    private float _currentResistanceChance;
     /// <summary>
     /// 当前抵抗率
     /// </summary>
     public float CurrentResistanceChance
     {
-        // 范围限制在0到1之间
-        get => Mathf.Clamp(CurrentResistanceChance, 0f, 1f);
-        set => CurrentResistanceChance = Mathf.Clamp(value, 0f, 1f);
+        get => Mathf.Clamp(_currentResistanceChance, 0f, 1f);
+        set => _currentResistanceChance = Mathf.Clamp(value, 0f, 1f);
     }
+
+    private float _currentDamageReductionRate;
     /// <summary>
     /// 当前减伤率
     /// </summary>
     public float CurrentDamageReductionRate
     {
-        // 范围限制在0到1之间
-        get => Mathf.Clamp(CurrentDamageReductionRate, 0f, 1f);
-        set => CurrentDamageReductionRate = Mathf.Clamp(value, 0f, 1f);
+        get => Mathf.Clamp(_currentDamageReductionRate, 0f, 1f);
+        set => _currentDamageReductionRate = Mathf.Clamp(value, 0f, 1f);
     }
 
     /// <summary>

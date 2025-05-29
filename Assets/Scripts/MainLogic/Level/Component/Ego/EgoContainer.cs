@@ -75,6 +75,7 @@ public class EgoContainer
         removeIDs.Sort((a, b) => b.CompareTo(a));
 
         foreach (var num in removeIDs)
+
         {
             if (UnitEgo.Count == EgoThreshold)
             {

@@ -11,5 +11,6 @@ public static class GameEntry
     {
         Debug.Log("LoadData");
         GlobalData.Init();
+        LevelDatabase.Init();
     }
 }
