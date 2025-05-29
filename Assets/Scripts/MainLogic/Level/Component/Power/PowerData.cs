@@ -21,6 +21,10 @@ public struct PowerData
     /// </summary>
     public int egoConsumption;
     /// <summary>
+    /// UI操作类型
+    /// </summary>
+    public string uiControlKind;
+    /// <summary>
     /// 技能描述
     /// </summary>
     public string description;

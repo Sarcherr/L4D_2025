@@ -24,7 +24,17 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
     /// <summary>
     /// 当前总回合数(从1开始)
     /// </summary>
-    public int CurrentGeneralTurn { get; set; }
+    public int CurrentGeneralTurn
+    {
+        get => CurrentGeneralTurn;
+        set
+        {
+            // 总回合被修改说明大回合结束/开始
+            // 自动触发一次Ego恢复
+            CurrentGeneralTurn = value;
+            ControllerManager.Instance.RecoverEgo();
+        }
+    }
 
     protected override void Init()
     {
