@@ -344,6 +344,53 @@ public class EgoContainer
 
         return false;
     }
+    /// <summary>  
+    /// 消耗Ego  
+    /// <para>指定数量优先消耗指定类型的Ego，默认从末尾开始</para>  
+    /// </summary>  
+    /// <param name="consumeCount">待消耗Ego数量</param>  
+    /// <param name="priorEgoType">优先消耗的Ego类型</param>  
+    /// <param name="consumeEgos">被消耗的Ego列表</param>  
+    /// <returns>是否成功消耗(待消耗数量是否超过当前数量)</returns>  
+    public bool ConsumeEgo(int consumeCount, string priorEgoType, out List<Ego> consumeEgos)
+    {
+        consumeEgos = new();
+        List<int> ego2RemoveIDs = new();
+        int cannotConsumeCount = UnitEgo.FindAll(x => x.CanConsume == false).Count;
+
+        // 注意判断时除去不能消耗的Ego数量  
+        if (UnitEgo.Count - cannotConsumeCount >= consumeCount)
+        {
+            int consumed = 0;
+
+            // 优先消耗指定类型的Ego  
+            for (int i = UnitEgo.Count - 1; i >= 0 && consumed < consumeCount; i--)
+            {
+                if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType == priorEgoType)
+                {
+                    ego2RemoveIDs.Add(i);
+                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                    consumed++;
+                }
+            }
+
+            // 如果优先类型不足，继续消耗其他类型的Ego  
+            for (int i = UnitEgo.Count - 1; i >= 0 && consumed < consumeCount; i--)
+            {
+                if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType != priorEgoType)
+                {
+                    ego2RemoveIDs.Add(i);
+                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
+                    consumed++;
+                }
+            }
+
+            consumeEgos = RemoveEgo(ego2RemoveIDs);
+            return true;
+        }
+
+        return false;
+    }
 
     /// <summary>
     /// 初始化时获得Ego(仅针对敌人)

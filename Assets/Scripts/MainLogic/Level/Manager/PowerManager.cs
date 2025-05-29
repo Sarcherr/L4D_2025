@@ -20,6 +20,9 @@ public class PowerManager : Singleton<PowerManager>
     /// </summary>
     public void GeneratePower(UIPowerMessage message)
     {
+        // 行动力消耗
+        ControllerManager.Instance.CurrentController.ActionPoint--;
+
         // todo:生成能力
         // todo:Ego消耗
         // todo:生成攻击与技能请求，发送给AttackManager与SkillManager
