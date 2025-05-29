@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MainLogic.UI.LevelSelectUI;
 using UnityEngine;
 using UI.LevelUI.Controller;
 using UnityEngine.UI;
@@ -120,8 +121,43 @@ public class UIManager : Singleton<UIManager>
                 string powerName = ControllerManager.Instance.
                     AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
                     PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.name;
-                Debug.Log($"PowerName: {powerName}");
-                button.GetComponent<PowerButton>().Refresh(powerName);
+                string powerDescription = ControllerManager.Instance.
+                    AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit].
+                    PowerRecord[button.GetComponent<PowerButton>().PowerID - 1].powerData.description;
+
+                Debug.Log($"PowerName: {powerName} PowerDescription: {powerDescription}");
+                button.GetComponent<PowerButton>().Refresh(powerName, powerDescription);
+            }
+        }
+    }
+
+    // todo: 带单位名称参数的刷新技能按钮方法
+    public void RefreshSkillButton(string targetUnit)
+    {
+        foreach (var button in ButtonsDic["LevelUI.Controller.PowerButton"])
+        {
+            // 只有前四个技能按钮需要刷新
+            if (button.GetComponent<PowerButton>().PowerID <= 4)
+            {
+                var targetUnitData = ControllerManager.Instance.AllRuntimeUnitData[targetUnit];
+                var powerIndex = button.GetComponent<PowerButton>().PowerID - 1;
+
+                string powerName;
+                string powerDescription;
+                
+                if (powerIndex > targetUnitData.PowerRecord.Count)
+                {
+                    powerName = " ";
+                    powerDescription = " ";
+                }
+                else
+                {
+                    powerName = targetUnitData.PowerRecord[powerIndex].powerData.name;
+                    powerDescription = targetUnitData.PowerRecord[powerIndex].powerData.description;
+                    
+                }
+                Debug.Log($"PowerName: {powerName} PowerDescription: {powerDescription}");
+                button.GetComponent<PowerButton>().Refresh(powerName, powerDescription);
             }
         }
     }
@@ -149,13 +185,38 @@ public class UIManager : Singleton<UIManager>
         {
             characterSelectButtons.Add(button.GetComponent<CharacterSelectButton>().CharacterID,button);
         }
+        
         int buttonIndex = 1;
-
         foreach (var pair in GlobalData.RuntimeUnitDataDic)
         {
              characterSelectButtons[buttonIndex].GetComponent<CharacterSelectButton>().Refresh(pair.Key);
              buttonIndex++;
         }
+    }
+    
+    #endregion
+    
+    #region UI_LevelSelect
+
+    public void RefreshLevelSelectButton()
+    {
+        LevelSelectManager.Instance.MonsterNames.Clear();
+        
+        Dictionary<int,Button> levelSelectButtons = new Dictionary<int,Button>();
+
+        foreach (var button in ButtonsDic["LevelSelectUI.LevelSelectButton"])
+        {
+            levelSelectButtons.Add(button.GetComponent<LevelSelectButton>().LevelID,button);
+        }
+        
+        int buttonIndex = 1;
+        foreach (var pair in LevelDatabase.LevelData)
+        {
+            levelSelectButtons[buttonIndex].GetComponent<LevelSelectButton>().Refresh(pair.Key);
+            buttonIndex++;
+        }
+        
+        
     }
     
     #endregion

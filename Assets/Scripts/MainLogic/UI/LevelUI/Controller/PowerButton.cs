@@ -12,6 +12,7 @@ namespace UI.LevelUI.Controller
     public class PowerButton : MonoBehaviour
     { 
         public string PowerName { get; private set; }
+        public string PowerDescription { get; private set; }
         public int PowerID { get; private set; }
         public Button Button { get; private set; }
         public TextMeshProUGUI Text { get; private set; }
@@ -41,10 +42,11 @@ namespace UI.LevelUI.Controller
         /// 刷新按钮
         /// </summary>
         /// <param name="name">对应能力名称</param>
-        public void Refresh(string name)
+        public void Refresh(string name, string description = null)
         {
             PowerName = name;
             Text.text = name;
+            PowerDescription = description;
         }
 
         /// <summary>

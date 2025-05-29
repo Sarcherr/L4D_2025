@@ -55,7 +55,7 @@ public class EgoMachine
     /// 触发Ego特效
     /// </summary>
     /// <param name="ego">对应Ego</param>
-    /// <param name="triggerType">触发类型(爆发Burst/失控OutOfControl)</param>
+    /// <param name="triggerType">触发类型(爆发Burst/失控OutOfControl/消耗Consume)</param>
     public void TriggerEgo(Ego ego, string triggerType)
     {
         EgoExecutor.ExecuteEgo(ego, triggerType);

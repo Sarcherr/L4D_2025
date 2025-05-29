@@ -8,7 +8,8 @@ public class BattleTest : MonoBehaviour
     void Start()
     {
         //List<string> names = new List<string> { "Dolora", "Nora", "Jia_Baoyu" };
-        BattleManager.Instance.InitBattle(CharacterSelectManager.Instance.SelectedCharacters, null);
+        BattleManager.Instance.InitBattle(CharacterSelectManager.Instance.SelectedCharacters,
+            LevelSelectManager.Instance.MonsterNames);
     }
 
     // Update is called once per frame
