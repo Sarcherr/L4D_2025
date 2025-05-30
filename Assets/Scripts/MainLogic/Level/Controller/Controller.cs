@@ -13,17 +13,18 @@ public class Controller : IController
 
     public EgoMachine EgoMachine { get; set; }
 
+    private int _actionPoint;
     /// <summary>
     /// 行动力(初始默认为1)
     /// <para>为零时高亮结束回合按钮(todo)</para>
     /// </summary>
     public int ActionPoint
     {
-        get => ActionPoint;
+        get => _actionPoint;
         set
         {
-            ActionPoint = value;
-            if (ActionPoint <= 0)
+            _actionPoint = value;
+            if (_actionPoint <= 0)
             {
                 // todo: 高亮结束回合按钮
             }
