@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.LevelUI.Controller
@@ -7,18 +8,23 @@ namespace UI.LevelUI.Controller
     /// <summary>
     /// 技能按钮
     /// </summary>
-    public class PowerButton : MonoBehaviour
+    public class PowerButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public string PowerName { get; private set; }
         public string PowerDescription { get; private set; }
         public int PowerID { get; private set; }
         public Button Button { get; private set; }
         public TextMeshProUGUI Text { get; private set; }
+        public GameObject DescriptionWindow { get; private set; }
+        public TextMeshProUGUI DescriptionText { get; private set; }
 
         private void Awake()
         {
             Button = GetComponent<Button>();
             Text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            DescriptionWindow = transform.GetChild(1).gameObject;
+            DescriptionText = DescriptionWindow.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            DescriptionWindow.SetActive(false);
             Button.onClick.AddListener(Power);
 
             // 能力按钮ID直接截取按钮gameobject名称格式Power_ID中末尾的ID数字
@@ -45,6 +51,23 @@ namespace UI.LevelUI.Controller
             PowerName = name;
             Text.text = name;
             PowerDescription = description;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            RefreshDescription();
+            DescriptionWindow.SetActive(true);
+            
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            DescriptionWindow.SetActive(false);
+        }
+
+        public void RefreshDescription()
+        {
+            DescriptionText.text = PowerDescription;
         }
 
         /// <summary>
