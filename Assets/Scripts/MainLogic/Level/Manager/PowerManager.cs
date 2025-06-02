@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// 能力管理器
@@ -11,6 +13,16 @@ public class PowerManager : Singleton<PowerManager>
     /// <param name="powerRequest"></param>
     public void HandleRequest(PowerRequest powerRequest)
     {
+        // 检查能力是否还有使用次数
+        var unitData = ControllerManager.Instance.AllRuntimeUnitData[powerRequest.Origin];
+        var powerData = GlobalData.PowerDataDic[powerRequest.Name];
+        if (powerData.limit != 0 &&
+            unitData.PowerRecord.Where(x => x.powerData.name == powerRequest.Name).First().powerData.limit == 0)
+        {
+            Debug.LogWarning($"Power {powerRequest.Name} has no remaining uses for unit {powerRequest.Origin}.");
+            return;
+        }
+
         // todo:向UI发送请求
         // 激活对应UI
     }
@@ -22,6 +34,10 @@ public class PowerManager : Singleton<PowerManager>
     {
         // 行动力消耗
         ControllerManager.Instance.CurrentController.ActionPoint--;
+        // (可能的)技能释放次数消耗
+        // todo: UI消息实现
+        // var unitData = ControllerManager.Instance.AllRuntimeUnitData[message.TargetUnit];
+        // unitData.PowerRecord.Where(x => x.powerData.name == message.PowerName).First().powerData.limit--;
 
         // todo:生成能力
         // todo:Ego消耗
