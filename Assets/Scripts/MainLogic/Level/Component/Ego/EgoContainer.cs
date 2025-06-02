@@ -38,11 +38,11 @@ public class EgoContainer
     {
         foreach (var ego in egoList)
         {
-            if (egoList.Count == EgoThreshold + 1)
+            if (UnitEgo.Count == EgoThreshold + 1)
             {
                 OnEgoBurst();
             }
-            else if (egoList.Count > EgoLimit)
+            else if (UnitEgo.Count > EgoLimit)
             {
                 OnEgoOutOfControl();
                 break;
@@ -286,18 +286,16 @@ public class EgoContainer
     public List<Ego> ConsumeEgo(List<int> consumeIDs)
     {
         List<Ego> consumeEgos = new();
-        // 对待消耗的ID进行排序，确保从大到小移除，避免索引偏移问题  
-        consumeIDs.Sort((a, b) => b.CompareTo(a));
-
         foreach (int i in consumeIDs)
         {
             if (UnitEgo[i].CanConsume)
             {
                 consumeEgos.Add(UnitEgo[i]);
-                EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
-                UnitEgo.RemoveAt(i);
             }
         }
+
+        consumeEgos = RemoveEgo(consumeIDs);
+        EgoMachine.TriggerEgo(consumeEgos, "Consume", BelongName);
         return consumeEgos;
     }
     /// <summary>
@@ -323,7 +321,6 @@ public class EgoContainer
                     if (UnitEgo[UnitEgo.Count - 1 - i].CanConsume)
                     {
                         ego2RemoveIDs.Add(UnitEgo.Count - 1 - i);
-                        EgoMachine.TriggerEgo(UnitEgo[UnitEgo.Count - 1 - i], "Consume");
                     }
                 }
             }
@@ -334,12 +331,12 @@ public class EgoContainer
                     if (UnitEgo[i].CanConsume)
                     {
                         ego2RemoveIDs.Add(i);
-                        EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
                     }
                 }
             }
 
             consumeEgos = RemoveEgo(ego2RemoveIDs);
+            EgoMachine.TriggerEgo(consumeEgos, "Consume", BelongName);
             return true;
         }
 
@@ -370,7 +367,6 @@ public class EgoContainer
                 if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType == priorEgoType)
                 {
                     ego2RemoveIDs.Add(i);
-                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
                     consumed++;
                 }
             }
@@ -381,12 +377,12 @@ public class EgoContainer
                 if (UnitEgo[i].CanConsume && UnitEgo[i].EgoType != priorEgoType)
                 {
                     ego2RemoveIDs.Add(i);
-                    EgoMachine.TriggerEgo(UnitEgo[i], "Consume");
                     consumed++;
                 }
             }
-
+  
             consumeEgos = RemoveEgo(ego2RemoveIDs);
+            EgoMachine.TriggerEgo(consumeEgos, "Consume", BelongName);
             return true;
         }
 
@@ -444,10 +440,7 @@ public class EgoContainer
     {
         ControllerManager.Instance.AllRuntimeUnitData[BelongName].IsBurst = true;
 
-        foreach (var ego in UnitEgo)
-        {
-            EgoMachine.TriggerEgo(ego, "Burst");
-        }
+        EgoMachine.TriggerEgo(UnitEgo, "Burst", BelongName);
     }
     /// <summary>
     /// Ego溢出上限(失控)
@@ -456,10 +449,7 @@ public class EgoContainer
     {
         ControllerManager.Instance.AllRuntimeUnitData[BelongName].IsOutOfControl = true;
 
-        foreach (var ego in UnitEgo)
-        {
-            EgoMachine.TriggerEgo(ego, "OutOfControl");
-        }
+        EgoMachine.TriggerEgo(UnitEgo, "OutOfControl", BelongName);
     }
     /// <summary>
     /// Ego低于阈值

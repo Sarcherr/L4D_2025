@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using UnityEngine;
 
 public class EgoMachine
 {
@@ -55,23 +58,32 @@ public class EgoMachine
     /// 触发Ego特效
     /// <para>爆发Burst/失控OutOfControl/消耗Consume</para>
     /// </summary>
-    /// <param name="ego">对应Ego</param>
+    /// <param name="egoList">对应Ego列表</param>
     /// <param name="triggerType">触发类型(爆发Burst/失控OutOfControl/消耗Consume)</param>
-    public void TriggerEgo(Ego ego, string triggerType)
+    /// <param name="belongName">所属单位名称</param>
+    public void TriggerEgo(List<Ego> egoList, string triggerType, string belongName)
     {
-        EgoExecutor.ExecuteEgo(ego, triggerType);
+        // 按EgoType分组  
+        var groupedEgos = egoList.GroupBy(ego => ego.EgoType)
+                                 .ToDictionary(group => group.Key, group => group.ToList());
+
+        // 对每个EgoType的List调用Execute方法  
+        foreach (var egoGroup in groupedEgos)
+        {
+            EgoExecutor.ExecuteEgo(egoGroup.Value, triggerType, belongName);
+        }
     }
 }
 
 // Attention: 记得修改
-// todo: 更改触发Ego效果的逻辑，不再是逐个触发，而是通过EgoExecutor统一处理单次生效内所有Ego的触发逻辑
+// 增添触发Ego效果的逻辑，不是逐个触发，而是通过EgoExecutor统一处理单次生效内所有Ego的触发逻辑
 
 /// <summary>
 /// Ego特效执行器
 /// </summary>
 public class EgoExecutor
 {
-    public Dictionary<string, Action<Ego, string>> EgoActions = new();
+    public Dictionary<string, Action<List<Ego>, string, string>> EgoActions = new();
 
     public EgoExecutor()
     {
@@ -83,27 +95,29 @@ public class EgoExecutor
             GetType().GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
         foreach (var method in methods)
         {
-            if (method.ReturnType == typeof(void) && method.GetParameters().Length == 2 &&
-                method.GetParameters()[0].ParameterType == typeof(Ego) &&
-                method.GetParameters()[1].ParameterType == typeof(string))
+            if (method.ReturnType == typeof(void) && method.GetParameters().Length == 3 &&
+                method.GetParameters()[0].ParameterType == typeof(List<Ego>) &&
+                method.GetParameters()[1].ParameterType == typeof(string) &&
+                method.GetParameters()[2].ParameterType == typeof(string))
             {
                 EgoActions[method.Name] =
-                    (Action<Ego, string>)Delegate.CreateDelegate(typeof(Action<Ego, string>), this, method);
+                    (Action<List<Ego>, string, string>)
+                    Delegate.CreateDelegate(typeof(Action<List<Ego>, string, string>), this, method);
             }
         }
     }
 
-    public void ExecuteEgo(Ego ego, string triggerType)
+    public void ExecuteEgo(List<Ego> egoList, string triggerType, string belongName)
     {
         // 字典索引为"EgoType" + "Method"
-        string methodName = ego.EgoType + "Method";
+        string methodName = egoList.FirstOrDefault().EgoType + "Method";
         if (EgoActions.TryGetValue(methodName, out var action))
         {
-            action.Invoke(ego, triggerType);
+            action.Invoke(egoList, triggerType, belongName);
         }
         else
         {
-            throw new Exception($"Ego action '{methodName}' not found.");
+            UnityEngine.Debug.LogWarning($"Ego action '{methodName}' has no trigger type '{triggerType}'.");
         }
     }
 
@@ -112,9 +126,10 @@ public class EgoExecutor
     /// <para>该ego不可被消耗，可以被转移。当持有者触发情感爆发状态时，每点ego提供10%的攻击力加成与5%的暴击率加成</para>
     /// <para>持有者失控时，每点愤怒ego会对人物产生一次等于当前攻击力的伤害，然后消耗自身</para>
     /// </summary>
-    /// <param name="ego"></param>
+    /// <param name="egoList"></param>
     /// <param name="triggerType"></param>
-    public void AngerMethod(Ego ego, string triggerType)
+    /// <param name="belongName"></param>
+    public void AngerMethod(List<Ego> egoList, string triggerType, string belongName)
     {
 
     }
