@@ -12,7 +12,7 @@ public class BattleManager : Singleton<BattleManager>
         // 4. 开始战斗
 
         // 步骤1：初始化单位/控制器
-
+        ControllerManager.Instance.RefreshControllers(); // 清除之前的控制器
         // 以string索引从GlobalData.RuntimeUnitDataDic中获取单位数据
         List<RuntimeUnitData> playerUnitData = new List<RuntimeUnitData>();
         if (playerUnits != null)

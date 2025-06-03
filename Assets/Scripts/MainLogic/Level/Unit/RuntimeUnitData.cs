@@ -50,6 +50,11 @@ public class RuntimeUnitData
     /// </summary>
     public bool IsOutOfControl;
 
+    /// <summary>
+    /// 是否死亡
+    /// </summary>
+    public bool IsDead;
+
     private int _currentHealth;
     /// <summary>  
     /// 当前生命值  
@@ -60,9 +65,12 @@ public class RuntimeUnitData
         set
         {
             _currentHealth = Mathf.Max(value, 0);
-            if (_currentHealth <= 0)
+            if (_currentHealth <= 0 && IsDead == false)
             {
                 // todo: 触发死亡事件的具体实现  
+                Debug.Log($"{Name} has died.");
+                IsDead = true;
+                ControllerManager.Instance?.CheckDeadUnit();
             }
         }
     }
@@ -171,5 +179,6 @@ public class RuntimeUnitData
         CurrentExtraAttackRate = 0f;
         IsBurst = false;
         IsOutOfControl = false;
+        IsDead = false;
     }
 }
