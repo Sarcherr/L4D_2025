@@ -11,6 +11,10 @@ public class ControllerManager : Singleton<ControllerManager>
     /// </summary>
     public IController Enemy;
     /// <summary>
+    /// 全局Buff机器，用于处理Buff的添加、移除和应用
+    /// </summary>
+    public BuffMachine BuffMachine = new();
+    /// <summary>
     /// 储存全局RuntimrUnitData索引
     /// </summary>
     public Dictionary<string, RuntimeUnitData> AllRuntimeUnitData = new();
@@ -27,6 +31,18 @@ public class ControllerManager : Singleton<ControllerManager>
     /// </summary>
     public IController CurrentController;
 
+    /// <summary>
+    /// 刷新控制器状态
+    /// </summary>
+    public void RefreshControllers()
+    {
+        Player = null;
+        Enemy = null;
+        AllRuntimeUnitData.Clear();
+        AllEgoContainers.Clear();
+        CurrentUnit = null;
+        CurrentController = null;
+    }
     /// <summary>
     /// 注册控制器
     /// </summary>
@@ -55,6 +71,24 @@ public class ControllerManager : Singleton<ControllerManager>
             foreach (var pair in controller.EgoMachine.UnitEgoContainers)
             {
                 AllEgoContainers.Add(pair.Key, pair.Value);
+            }
+        }
+    }
+    /// <summary>
+    /// 检查单位是否死亡
+    /// </summary>
+    public void CheckDeadUnit()
+    {
+        foreach (var pair in AllRuntimeUnitData)
+        {
+            if (pair.Value.IsDead == true)
+            {
+                if (TurnManager.Instance.CurrentTurn.Name == pair.Key)
+                {
+                    // 如果当前回合单位死亡，切换到下一个单位
+                    TurnManager.Instance.NextTurn();
+                }
+                // todo: 处理单位死亡逻辑(移除出回合序列等)
             }
         }
     }
