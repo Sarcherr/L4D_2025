@@ -5,12 +5,33 @@ using UnityEngine.EventSystems;
 
 public class AcUI : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject actionArrow; // ĞĞ¶¯¼ıÍ·
-    public GameObject selectionRing; // Ñ¡ÖĞÔ²»·
-    private string unitName; // µ¥Î»Ãû³Æ
-    private RuntimeUnitData unitData; // µ¥Î»ÔËĞĞÊ±Êı¾İ
+    public GameObject actionArrow; // è¡ŒåŠ¨ç®­å¤´
+    public GameObject selectionRing; // é€‰ä¸­åœ†ç¯
+    private string unitName; // å•ä½åç§°
+    private RuntimeUnitData unitData; // å•ä½è¿è¡Œæ—¶æ•°æ®
+
+    public bool isInit = false; // æ˜¯å¦å·²åˆå§‹åŒ–
 
     public static AcUI currentlySelectedUnit;
+
+    public void Init()
+    {
+        // ä»çˆ¶å¯¹è±¡è·å–å•ä½åç§°
+        unitName = gameObject.name;
+        // ä» ControllerManager è·å–å•ä½æ•°æ®
+        if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
+        {
+            unitData = data;
+            isInit = true;
+            return;
+        }
+        else
+        {
+            Debug.LogError($"UnitUIManager: Cannot find unit data for {unitName}");
+            isInit = false;
+            return;
+        }
+    }
 
     private void Awake()
     {
@@ -19,35 +40,31 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     }
     void Start()
     {
-        // ´Ó¸¸¶ÔÏó»ñÈ¡µ¥Î»Ãû³Æ
-        unitName = gameObject.name;
-        // ´Ó ControllerManager »ñÈ¡µ¥Î»Êı¾İ
-        if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
-        {
-            unitData = data;
-        }
-        else
-        {
-            Debug.LogError($"UnitUIManager: Cannot find unit data for {unitName}");
-        }
     }
     void Update()
     {
-        // ¼ì²éÊÇ·ñÊÇµ±Ç°ĞĞ¶¯µ¥Î»
-        if (TurnManager.Instance.CurrentTurn.Name == unitName)
+        if (!isInit)
         {
-            if (actionArrow != null) actionArrow.SetActive(true);
+            Init();
         }
         else
         {
-            if (actionArrow != null) actionArrow.SetActive(false);
+            // æ£€æŸ¥æ˜¯å¦æ˜¯å½“å‰è¡ŒåŠ¨å•ä½
+            if (TurnManager.Instance.CurrentTurn.Name == unitName)
+            {
+                if (actionArrow != null) actionArrow.SetActive(true);
+            }
+            else
+            {
+                if (actionArrow != null) actionArrow.SetActive(false);
+            }
         }
     }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // ×ó¼üµã»÷£¬Ñ¡ÖĞ¸Ãµ¥Î»
+            // å·¦é”®ç‚¹å‡»ï¼Œé€‰ä¸­è¯¥å•ä½
             SelectUnit();
         }
     }
@@ -58,7 +75,7 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
             currentlySelectedUnit.DeselectUnit();
         }
 
-        // ÉèÖÃµ±Ç°µ¥Î»ÎªÑ¡ÖĞ×´Ì¬
+        // è®¾ç½®å½“å‰å•ä½ä¸ºé€‰ä¸­çŠ¶æ€
         currentlySelectedUnit = this;
         if (selectionRing != null) selectionRing.SetActive(true);
     }
