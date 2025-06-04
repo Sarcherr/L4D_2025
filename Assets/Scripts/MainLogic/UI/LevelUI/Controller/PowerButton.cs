@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.LevelUI.Controller
@@ -15,8 +16,12 @@ namespace UI.LevelUI.Controller
         public int PowerID { get; private set; }
         public Button Button { get; private set; }
         public TextMeshProUGUI Text { get; private set; }
+        /// <summary>
+        /// 悬浮窗object
+        /// </summary>
         public GameObject DescriptionWindow { get; private set; }
         public TextMeshProUGUI DescriptionText { get; private set; }
+        public bool isFollowMouse = true;
 
         private void Awake()
         {
@@ -53,6 +58,7 @@ namespace UI.LevelUI.Controller
             PowerDescription = description;
         }
 
+        #region 悬浮窗相关
         public void OnPointerEnter(PointerEventData eventData)
         {
             RefreshDescription();
@@ -70,13 +76,15 @@ namespace UI.LevelUI.Controller
             DescriptionText.text = PowerDescription;
         }
 
+        #endregion
+
         /// <summary>
         /// 按钮点击事件
         /// </summary>
         public void Power()
         {
             Debug.Log($"{PowerID}: {PowerName}");
-            if (PowerName != null)
+            if (PowerName != null && UIManager.Instance.IsCurrentUnit)
             {
                 ControllerManager.Instance.Player.Power(PowerName);
             }
