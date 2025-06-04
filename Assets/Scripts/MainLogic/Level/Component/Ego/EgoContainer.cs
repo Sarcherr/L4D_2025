@@ -457,7 +457,8 @@ public class EgoContainer
     public void OnEgoBelowThreshold()
     {
         ControllerManager.Instance.AllRuntimeUnitData[BelongName].IsBurst = false;
-        // todo: BuffMachine移除相关buff
+        // BuffMachine移除相关buff
+        ControllerManager.Instance.BuffMachine.RemoveBurstBuffs();
     }
     /// <summary>
     /// Ego失控结束
@@ -465,6 +466,7 @@ public class EgoContainer
     public void OnEgoOutOfControlEnd()
     {
         ControllerManager.Instance.AllRuntimeUnitData[BelongName].IsOutOfControl = false;
-        // todo: BuffMachine移除相关buff
+        // BuffMachine移除相关buff
+        ControllerManager.Instance.BuffMachine.RemoveOutOfControlBuffs();
     }
 }

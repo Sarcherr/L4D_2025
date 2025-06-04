@@ -131,6 +131,19 @@ public class EgoExecutor
     /// <param name="belongName"></param>
     public void AngerMethod(List<Ego> egoList, string triggerType, string belongName)
     {
-
+        int egoCount = egoList.Count;
+        if(triggerType == "Burst")
+        {
+            // 情感爆发时，提供攻击力加成与暴击率加成(通过挂对应Buff实现)
+            Buff buff = new("Buff_AngerEgo_Burst", TurnStage.Current, BuffType.Burst,
+                belongName, "EgoMachine", -1, egoCount);
+            ControllerManager.Instance.BuffMachine.AddBuff(buff);
+        }
+        else if (triggerType == "OutOfControl")
+        {
+            // 失控时，对持有者造成伤害
+            Ego ego = egoList.FirstOrDefault();
+            AttackManager.Instance.GetAttack(ego.HostName, belongName, 1.0f);
+        }
     }
 }

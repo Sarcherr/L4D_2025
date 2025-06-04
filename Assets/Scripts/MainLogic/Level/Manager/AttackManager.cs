@@ -61,9 +61,9 @@ public class AttackManager : Singleton<AttackManager>
         }
         else
         {
-            // 基础伤害 = 攻击单位攻击力 * (1 + 攻击单位额外攻击力) * 技能伤害倍率 * 受击单位当前减伤率
+            // 基础伤害 = 攻击单位攻击力 * (1 + 攻击单位额外攻击力) * 技能伤害倍率 * (1 - 受击单位当前减伤率)
             int damage = (int)(originUnitData.CurrentAttack * (1 + originUnitData.CurrentExtraAttackRate)
-                * damageRate * targetUnitData.CurrentDamageReductionRate);
+                * damageRate * (1 - targetUnitData.CurrentDamageReductionRate));
             if (crit)
             {
                 damage = (int)(damage * originUnitData.CurrentCritRate);
