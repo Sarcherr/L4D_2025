@@ -50,22 +50,36 @@ public class RuntimeUnitData
     /// </summary>
     public bool IsOutOfControl;
 
+
     /// <summary>
     /// 是否死亡
     /// </summary>
     public bool IsDead;
 
+
+    public int Health;
+    /// <summary>
+    /// 总生命值
+    /// </summary>
+
     private int _currentHealth;
     /// <summary>  
     /// 当前生命值  
     /// </summary>  
+    public event System.Action<int> OnHealthChanged;
     public int CurrentHealth
     {
         get => Mathf.Max(_currentHealth, 0);
         set
         {
+            int oldValue = _currentHealth;
             _currentHealth = Mathf.Max(value, 0);
-            if (_currentHealth <= 0 && IsDead == false)
+
+            if (oldValue != _currentHealth)
+            {
+                OnHealthChanged?.Invoke(_currentHealth);
+            }
+            if (_currentHealth <= 0&& IsDead == false)
             {
                 // todo: 触发死亡事件的具体实现  
                 Debug.Log($"{Name} has died.");
