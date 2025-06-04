@@ -20,7 +20,7 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         // 从父对象获取单位名称
-        unitName = transform.parent.name;
+        unitName = gameObject.name;
         // 从 ControllerManager 获取单位数据
         if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
         {

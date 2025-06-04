@@ -71,7 +71,7 @@ public class UIManager : Singleton<UIManager>
             TogglesDic[UIgroup].Add(targetUI as Toggle);
         }
 
-        Debug.Log($"RegisterUI: {UIgroup} - {(targetUI as MonoBehaviour).gameObject.name}");
+        //Debug.Log($"RegisterUI: {UIgroup} - {(targetUI as MonoBehaviour).gameObject.name}");
     }
     public void RegisterEgoContainer(UI.LevelUI.Controller.EgoContainer egoContainer)
     {
@@ -255,5 +255,22 @@ public class UIManager : Singleton<UIManager>
 /// </summary>
 public struct UIPowerMessage
 {
+    /// <summary>
+    /// 能力名称
+    /// </summary>
+    public string Name;
+    /// <summary>
+    /// 发起者名称
+    /// </summary>
+    public string Origin;
+    /// <summary>
+    /// 目标
+    /// </summary>
+    public List<string> Target;
+    /// <summary>
+    /// Ego消耗
+    /// </summary>
+    public List<Ego> EgoComsumption;
+    
 
 }

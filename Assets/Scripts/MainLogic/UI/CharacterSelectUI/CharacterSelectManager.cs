@@ -20,7 +20,7 @@ public class CharacterSelectManager : Singleton<CharacterSelectManager>
             allSelectedCharacters += character + ", ";
         }
 
-        Debug.Log("current selected characters:" + allSelectedCharacters);
+        //Debug.Log("current selected characters:" + allSelectedCharacters);
     }
 
 

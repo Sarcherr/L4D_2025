@@ -763,7 +763,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TestLevel
+          m_StringArgument: CharacterSelect
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &358727862
@@ -935,7 +935,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -984,8 +984,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: 267.79376, y: 100}
+  m_AnchoredPosition: {x: -58, y: -96}
+  m_SizeDelta: {x: 627.9855, y: 101.5117}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &650170080
 MonoBehaviour:
@@ -1009,12 +1009,12 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
-    m_FontSize: 40
+    m_FontSize: 64
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 50
-    m_Alignment: 4
+    m_MaxSize: 300
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1285,22 +1285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe871f6b2d33fb498ce616838412d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left_button: {fileID: 1706656492}
-  right_button: {fileID: 1091705426}
-  active_item: {fileID: 2035960349}
-  active_index: 0
-  options:
-  - 0/10
-  - 1/10
-  - 2/10
-  - 3/10
-  - 4/10
-  - 5/10
-  - 6/10
-  - 7/10
-  - 8/10
-  - 9/10
-  - 10/10
 --- !u!1 &889388307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1365,7 +1349,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1649,7 +1633,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -2534,7 +2518,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -2600,13 +2584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe871f6b2d33fb498ce616838412d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left_button: {fileID: 153336471}
-  right_button: {fileID: 900407188}
-  active_item: {fileID: 1402654206}
-  active_index: 0
-  options:
-  - English
-  - Farsi
 --- !u!1 &1464920589
 GameObject:
   m_ObjectHideFlags: 0
@@ -2882,7 +2859,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 25}
+  m_AnchoredPosition: {x: -408.33, y: -78}
   m_SizeDelta: {x: 250, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1691074759
@@ -2936,13 +2913,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe871f6b2d33fb498ce616838412d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left_button: {fileID: 305161482}
-  right_button: {fileID: 686905597}
-  active_item: {fileID: 1948340572}
-  active_index: 0
-  options:
-  - 1920X1080
-  - 800X600
 --- !u!1 &1706656490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,14 +3175,14 @@ RectTransform:
   m_GameObject: {fileID: 1820880483}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 252676588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 78.226, y: -142}
+  m_AnchoredPosition: {x: 209, y: -89}
   m_SizeDelta: {x: 534.27057, y: 464.58307}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1820880485
@@ -3515,13 +3485,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe871f6b2d33fb498ce616838412d91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left_button: {fileID: 1102107387}
-  right_button: {fileID: 1464920591}
-  active_item: {fileID: 249643848}
-  active_index: 0
-  options:
-  - On
-  - Off
 --- !u!1 &2035960347
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleManager : Singleton<BattleManager>
@@ -37,6 +38,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             foreach (string unitName in enemyUnits)
             {
+                Debug.Log(unitName);
                 if (GlobalData.UnitDataDic.TryGetValue(unitName, out UnitData unitData))
                 {
                     RuntimeUnitData runtimeUnitData = new RuntimeUnitData();
@@ -54,6 +56,11 @@ public class BattleManager : Singleton<BattleManager>
         ControllerManager.Instance.RegisterController(player);
         ControllerManager.Instance.RegisterController(enemy);
 
+
+        foreach (var pair in ControllerManager.Instance.AllRuntimeUnitData)
+        {
+            Debug.LogWarning(pair.Key);
+        }
         // 步骤2：初始化TurnSystem
         TurnManager.Instance.RefreshQueue();
 

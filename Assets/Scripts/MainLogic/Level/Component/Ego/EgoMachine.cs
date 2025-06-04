@@ -27,7 +27,7 @@ public class EgoMachine
             // 初始化时按单位数据获得一定量普通Ego(仅针对敌人)
             if (unitData.UnitKind == "Enemy")
             {
-                egoContainer.OnEgoInit();
+                //egoContainer.OnEgoInit();
             }
             UnitEgoContainers.Add(unitData.Name, egoContainer);
         }
