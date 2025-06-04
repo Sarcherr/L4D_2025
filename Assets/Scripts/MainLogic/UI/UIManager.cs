@@ -20,10 +20,15 @@ public class UIManager : Singleton<UIManager>
     /// 切换字典
     /// </summary>
     public Dictionary<string, List<Toggle>> TogglesDic { get; private set; }
+    /// <summary>
+    /// 滑动条字典
+    /// </summary>
+    public Dictionary<string, List<ScrollRect>> ScrollRect {  get; private set; }
     
     public UI.LevelUI.Controller.EgoContainer EgoContainer { get; private set; }
 
     public bool IsCurrentUnit { get; private set; } = true;
+
 
     protected override void Init()
     {
