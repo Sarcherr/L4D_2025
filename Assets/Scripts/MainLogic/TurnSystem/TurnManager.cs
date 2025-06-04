@@ -261,17 +261,14 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             CurrentTurnQueue = new List<Turn>(BaseTurnQueue);
             CurrentTurn = CurrentTurnQueue[0];
         }
-        else
+        // 切换当前单位
+        ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
+        // 自动选中当前行动的角色
+        var unitUI = GameObject.Find(CurrentTurn.Name)?.GetComponent<AcUI>();
+        if (unitUI != null)
         {
-            ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
-            // 自动选中当前行动的角色
-            var unitUI = GameObject.Find(CurrentTurn.Name)?.GetComponent<AcUI>();
-            if (unitUI != null)
-            {
-                unitUI.SelectUnit();
-            }
+            unitUI.SelectUnit();
         }
-
         // 刷新UI
         UIManager.Instance.RefreshSkillButton();
     }
