@@ -24,12 +24,18 @@ public class UIManager : Singleton<UIManager>
     /// 滑动条字典
     /// </summary>
     public Dictionary<string, List<ScrollRect>> ScrollRect {  get; private set; }
+    
+    public UI.LevelUI.Controller.EgoContainer EgoContainer { get; private set; }
+
+    public bool IsCurrentUnit { get; private set; } = true;
+
 
     protected override void Init()
     {
         ButtonsDic = new Dictionary<string, List<Button>>();
         SlidersDic = new Dictionary<string, List<Slider>>();
         TogglesDic = new Dictionary<string, List<Toggle>>();
+        
     }
 
     /// <summary>
@@ -67,6 +73,11 @@ public class UIManager : Singleton<UIManager>
 
         Debug.Log($"RegisterUI: {UIgroup} - {(targetUI as MonoBehaviour).gameObject.name}");
     }
+    public void RegisterEgoContainer(UI.LevelUI.Controller.EgoContainer egoContainer)
+    {
+        EgoContainer = egoContainer;
+    }
+    
     /// <summary>
     /// 注销UI
     /// </summary>
@@ -166,7 +177,6 @@ public class UIManager : Singleton<UIManager>
     }
 
     // todo: 带单位名称参数的刷新技能按钮方法
-
     /// <summary>
     /// 向PowerManager发送UI消息
     /// </summary>
@@ -175,8 +185,22 @@ public class UIManager : Singleton<UIManager>
         PowerManager.Instance.GeneratePower(message);
     }
 
-    #endregion
+    //刷新所有EgoItems,后续放入游戏逻辑中
+    public void RefreshEgoContainer(List<Ego> egos)
+    {
+        EgoContainer.RefreshEgoItems(egos);
+    }
 
+    public void RefreshInformationButton(UnitData information)
+    {
+        Button button = ButtonsDic["LevelUI.InformationDisplay.InformationDisplayButton"][0];
+
+        button.gameObject.GetComponent<InformationDisplayButton>().Refresh(information);
+    }
+    
+    
+
+    #endregion
     #region UI_CharacterSelect
 
     public void RefreshCharacterSelectButton()
