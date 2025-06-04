@@ -20,6 +20,10 @@ public class UIManager : Singleton<UIManager>
     /// 切换字典
     /// </summary>
     public Dictionary<string, List<Toggle>> TogglesDic { get; private set; }
+    /// <summary>
+    /// 滑动条字典
+    /// </summary>
+    public Dictionary<string, List<ScrollRect>> ScrollRect {  get; private set; }
 
     protected override void Init()
     {
