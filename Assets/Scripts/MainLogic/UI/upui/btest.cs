@@ -56,7 +56,7 @@ public class btest : MonoBehaviour
             currentItems.Add(item);
         }
 
-        StartCoroutine(TurnLoop());
+        //StartCoroutine(TurnLoop());
     }
 
     /// <summary>

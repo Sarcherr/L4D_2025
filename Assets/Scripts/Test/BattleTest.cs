@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleTest : MonoBehaviour
@@ -6,8 +7,9 @@ public class BattleTest : MonoBehaviour
     void Start()
     {
         //List<string> names = new List<string> { "Dolora", "Nora", "Jia_Baoyu" };
+        List<string> monsterNames = new List<string> { "Trunk" };
         BattleManager.Instance.InitBattle(CharacterSelectManager.Instance.SelectedCharacters,
-            LevelSelectManager.Instance.MonsterNames);
+            monsterNames);
         
     }
 
