@@ -395,7 +395,7 @@ public class EgoContainer
     public void OnEgoInit()
     {
         List<Ego> recoverEgos = new();
-        for (int i = 0; i < GlobalData.RuntimeUnitDataDic[BelongName].EgoStartValue; i++)
+        for (int i = 0; i < ControllerManager.Instance.AllRuntimeUnitData[BelongName].EgoStartValue; i++)
         {
             if (UnitEgo.Count < EgoLimit)
             {

@@ -11,7 +11,7 @@ public class HealthBar : MonoBehaviour
 
     void Start()
     {
-        unitName = transform.parent.name;
+        unitName = gameObject.name;
         if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
         {
             unitData = data;

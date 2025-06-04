@@ -20,6 +20,6 @@ public class CharacterSelectConfirm : MonoBehaviour
             return;
         }
         // 加载战斗场景
-        SceneManager.LoadScene("TestLevel");
+        SceneManager.LoadScene("LevelSelect");
     }
 }
