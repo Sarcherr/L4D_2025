@@ -61,6 +61,15 @@ public class BuffMachine
             foreach (var buff in buffs.ToList()) // 使用ToList()避免修改集合时的异常
             {
                 Executer.ExecuteBuff(buff, "Update");
+                // 更新buff的回合数
+                if (buff.TurnCount > 0)
+                {
+                    buff.TurnCount--;
+                    if (buff.TurnCount <= 0)
+                    {
+                        RemoveBuff(buff.Name); // 回合数为0时移除Buff
+                    }
+                }
             }
         }
     }
@@ -168,4 +177,28 @@ public class BuffExecuter
             unitData.CurrentCritRate -= 0.05f * buff.BuffCount;
         }
     }
+
+    /// <summary>
+    /// 沉眠_伤害减免
+    /// <para>自身减伤率+50%</para>
+    /// </summary>
+    /// <param name="buff"></param>
+    /// <param name="type"></param>
+    public void Buff_Sleepy_DamageReduction(Buff buff, string type)
+    {
+        if (type == "Add")
+        {
+            // 添加时，增加减伤率
+            var unitData = ControllerManager.Instance.AllRuntimeUnitData[buff.BelongName];
+            unitData.CurrentDamageReductionRate += 0.5f; // 增加50%的减伤率
+        }
+        else if (type == "Remove")
+        {
+            // 移除时，恢复原有减伤率
+            var unitData = ControllerManager.Instance.AllRuntimeUnitData[buff.BelongName];
+            unitData.CurrentDamageReductionRate -= 0.5f; // 恢复50%的减伤率
+        }
+    }
+
+
 }

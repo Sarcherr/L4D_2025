@@ -73,4 +73,61 @@ public class SkillExecutor
             targetContainer.GainEgo(egos);
         }
     }
+
+    /// <summary>
+    /// 爱丽丝-沉眠
+    /// <para>使自身立刻获得3点美梦ego，到下回合为止自身减伤率+50%</para>
+    /// </summary>
+    /// <param name="request"></param>
+    public void Sleepy(SkillRequest request)
+    {
+        // 使自身立刻获得3点美梦ego
+        var egoContainer = ControllerManager.Instance.AllEgoContainers[request.Origin];
+        var ego = new Ego
+        {
+            EgoType = "Dream",
+            HostName = request.Origin,
+            CanConsume = true,
+        };
+        egoContainer.GainEgo(new List<Ego> { ego, ego, ego });
+
+        // 赋予自身一层一回合减伤buff
+        var buff = new Buff("Buff_Sleepy_DamageReduction", TurnStage.Start, BuffType.Normal, 
+            request.Origin, "SkillManager", 1, 1);
+        ControllerManager.Instance.BuffMachine.AddBuff(buff);
+    }
+    /// <summary>
+    /// 爱丽丝-醒梦
+    /// <para>指定敌方单体，使其最后获得的4点ego转化为噩梦ego，自身下回合ego回复量+2</para>
+    /// </summary>
+    /// <param name="request"></param>
+    public void Waking_dream(SkillRequest request)
+    {
+        // 指定敌方单体，使其最后获得的4点ego转化为噩梦ego
+        var targetContainer = ControllerManager.Instance.AllEgoContainers[request.Target.FirstOrDefault()];
+        int egoCount = targetContainer.UnitEgo.Count;
+        if(egoCount > 0)
+        {
+            var ego = new Ego
+            {
+                EgoType = "Nightmare",
+                HostName = targetContainer.BelongName,
+                CanConsume = true,
+            };
+
+            if(egoCount >= 4)
+            {
+                targetContainer.TransformEgo(4, true, ego, out _);
+            }
+            else
+            {
+                targetContainer.TransformEgo(egoCount, true, ego, out _);
+            }
+        }
+
+        // 自身下回合ego回复量+2
+        var buff = new Buff("Buff_Waking_dream_EgoRecovery", TurnStage.Start, BuffType.Normal,
+            request.Origin, request.Origin, 1, 1);
+        ControllerManager.Instance.BuffMachine.AddBuff(buff);
+    }
 }
