@@ -59,6 +59,8 @@ public class Controller : IController
         // 重置行动力
         ActionPoint = 1;
         OnTurnStart();
+
+
     }
     /// <summary>
     /// 发动能力
@@ -79,6 +81,11 @@ public class Controller : IController
 
             PowerManager.Instance.HandleRequest(request);
         }
+        else
+        {
+            Debug.LogWarning($"Unit {CurrentUnit} has no action points left to use power {power}.");
+            // todo: 可以的话弹出提示UI
+        }
     }
     /// <summary>
     /// 结束当前单位的回合
@@ -98,10 +105,16 @@ public class Controller : IController
     {
         EgoMachine.RecoverEgo();
     }
+    /// <summary>
+    /// 每个单位的回合开始时调用
+    /// </summary>
     public void OnTurnStart()
     {
 
     }
+    /// <summary>
+    /// 每个单位的回合结束时调用
+    /// </summary>
     public void OnTurnEnd()
     {
         

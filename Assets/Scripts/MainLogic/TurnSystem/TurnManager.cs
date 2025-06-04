@@ -261,11 +261,8 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
             CurrentTurnQueue = new List<Turn>(BaseTurnQueue);
             CurrentTurn = CurrentTurnQueue[0];
         }
-        else
-        {
-            ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
-        }
-
+        // 切换当前单位
+        ControllerManager.Instance.SwitchUnit(CurrentTurn.Name);
         // 刷新UI
         UIManager.Instance.RefreshSkillButton();
     }

@@ -101,6 +101,9 @@ public class ControllerManager : Singleton<ControllerManager>
     {
         if (name != "End")
         {
+            // 结束当前单位的回合
+            OnTurnEnd();
+
             var unitData = AllRuntimeUnitData[name];
 
             if (unitData.UnitKind == "Player")
@@ -115,6 +118,9 @@ public class ControllerManager : Singleton<ControllerManager>
             }
 
             CurrentUnit = unitData;
+
+            // 开始新单位的回合
+            OnTurnStart();
         }
     }
 
@@ -123,7 +129,21 @@ public class ControllerManager : Singleton<ControllerManager>
     /// </summary>
     public void RecoverEgo()
     {
-        Player.EgoMachine.RecoverEgo();
-        Enemy.EgoMachine.RecoverEgo();
+        Player.RecoverEgo();
+        Enemy.RecoverEgo();
+    }
+    /// <summary>
+    /// 每个单位的回合开始时调用
+    /// </summary>
+    public void OnTurnStart()
+    {
+        CurrentController?.OnTurnStart();
+    }
+    /// <summary>
+    /// 每个单位的回合结束时调用
+    /// </summary>
+    public void OnTurnEnd()
+    {
+        CurrentController?.OnTurnEnd();
     }
 }
