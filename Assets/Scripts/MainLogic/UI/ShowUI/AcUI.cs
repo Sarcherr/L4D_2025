@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class AcUI : MonoBehaviour, IPointerClickHandler
 {
@@ -13,6 +14,9 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     public bool isInit = false; // 是否已初始化
 
     public static AcUI currentlySelectedUnit;
+    public string UnitAffiliation;
+    // 添加事件系统
+    public static event Action<string> OnUnitSelected;
 
     public void Init()
     {
@@ -37,9 +41,11 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     {
         if (actionArrow != null) actionArrow.SetActive(false);
         if (selectionRing != null) selectionRing.SetActive(false);
+        UnitAffiliation = ControllerManager.Instance.AllRuntimeUnitData[unitName].UnitKind;
     }
     void Start()
     {
+
     }
     void Update()
     {
@@ -64,7 +70,9 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
+
             // 左键点击，选中该单位
+
             SelectUnit();
         }
     }
@@ -75,16 +83,17 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
             currentlySelectedUnit.DeselectUnit();
         }
 
+
         // 设置当前单位为选中状态
         currentlySelectedUnit = this;
         if (selectionRing != null) selectionRing.SetActive(true);
+        
+        // 触发单位选择事件
+        OnUnitSelected?.Invoke(unitName);
     }
+    
     public void DeselectUnit()
     {
         if (selectionRing != null) selectionRing.SetActive(false);
-        if (currentlySelectedUnit == this)
-        {
-            currentlySelectedUnit = null;
-        }
     }
 }
