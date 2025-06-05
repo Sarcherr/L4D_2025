@@ -200,6 +200,7 @@ public class UIManager : Singleton<UIManager>
         Button button = ButtonsDic["LevelUI.InformationDisplay.InformationDisplayButton"][0];
 
         button.gameObject.GetComponent<InformationDisplayButton>().Refresh(information);
+        
     }
     
     
