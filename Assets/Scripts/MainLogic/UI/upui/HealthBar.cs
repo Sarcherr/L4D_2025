@@ -9,7 +9,9 @@ public class HealthBar : MonoBehaviour
     private string unitName; 
     private RuntimeUnitData unitData; 
 
-    void Start()
+    public bool isInit = false;
+
+    public void Init()
     {
         unitName = gameObject.name;
         if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
@@ -17,11 +19,20 @@ public class HealthBar : MonoBehaviour
             unitData = data;
             unitData.OnHealthChanged += HandleHealthChanged;
             UpdateHealthBar();
+
+            isInit = true;
+            return;
         }
         else
         {
             Debug.LogError($"HealthBar: Cannot find unit data for {unitName}");
+            isInit = false;
+            return;
         }
+    }
+
+    void Start()
+    {
     }
     void OnDestroy()
     {
@@ -32,7 +43,14 @@ public class HealthBar : MonoBehaviour
     }
     void Update()
     {
-        UpdateHealthBar();
+        if (!isInit)
+        {
+            Init();
+        }
+        else
+        {
+            UpdateHealthBar();
+        }
     }
     private void HandleHealthChanged(int newHealth)
     {

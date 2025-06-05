@@ -199,6 +199,25 @@ public class BuffExecuter
             unitData.CurrentDamageReductionRate -= 0.5f; // 恢复50%的减伤率
         }
     }
-
-
+    /// <summary>
+    /// 醒梦_Ego恢复
+    /// <para>自身下回合ego回复量+2</para>
+    /// </summary>
+    /// <param name="buff"></param>
+    /// <param name="type"></param>
+    public void Buff_Waking_dream_EgoRecovery(Buff buff, string type)
+    {
+        if (type == "Add")
+        {
+            // 添加时，增加下回合ego回复量
+            var unitData = ControllerManager.Instance.AllRuntimeUnitData[buff.BelongName];
+            unitData.EgoRecoverValue += 2; // 增加2点ego回复量
+        }
+        else if (type == "Remove")
+        {
+            // 移除时，恢复原有下回合ego回复量
+            var unitData = ControllerManager.Instance.AllRuntimeUnitData[buff.BelongName];
+            unitData.EgoRecoverValue -= 2; // 恢复2点ego回复量
+        }
+    }
 }
