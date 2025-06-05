@@ -22,6 +22,8 @@ public class CharacterSelectButton : MonoBehaviour
     public Image CharacterIcon { get; private set; }
     public Button CharacterButton { get; private set; }
     public TextMeshProUGUI CharacterNameText { get; private set; }
+    public Sprite SelectedCharacterIcon;
+    public Sprite UnselectedCharacterIcon;
 
 
 
@@ -61,11 +63,11 @@ public class CharacterSelectButton : MonoBehaviour
     {
         if (IsSelected)
         {
-            CharacterIcon.color = Color.gray;
+            CharacterIcon.sprite = SelectedCharacterIcon;
         }
         else
         {
-            CharacterIcon.color = Color.white;
+            CharacterIcon.sprite = UnselectedCharacterIcon;
         }
     }
 
