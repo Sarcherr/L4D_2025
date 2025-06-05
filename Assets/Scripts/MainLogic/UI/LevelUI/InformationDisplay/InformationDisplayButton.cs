@@ -41,12 +41,14 @@ public class InformationDisplayButton : MonoBehaviour
             InformationText.text = "No Data";
         }
         
+        Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(DisplayInformation);
     }
     
 
     private void DisplayInformation()
     {
+        Debug.Log("DisplayInformation called for " + UnitData.Name);
         if (!InformationPanel.activeInHierarchy)
         {
             InformationPanel.SetActive(true);
