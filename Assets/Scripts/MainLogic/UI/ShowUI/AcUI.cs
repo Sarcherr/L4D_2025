@@ -26,6 +26,8 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
         if (ControllerManager.Instance.AllRuntimeUnitData.TryGetValue(unitName, out RuntimeUnitData data))
         {
             unitData = data;
+            UnitAffiliation = ControllerManager.Instance.AllRuntimeUnitData[unitName].UnitKind;
+
             isInit = true;
             return;
         }
@@ -41,7 +43,6 @@ public class AcUI : MonoBehaviour, IPointerClickHandler
     {
         if (actionArrow != null) actionArrow.SetActive(false);
         if (selectionRing != null) selectionRing.SetActive(false);
-        UnitAffiliation = ControllerManager.Instance.AllRuntimeUnitData[unitName].UnitKind;
     }
     void Start()
     {
