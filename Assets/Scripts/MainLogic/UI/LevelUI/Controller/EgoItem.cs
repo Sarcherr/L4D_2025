@@ -31,23 +31,13 @@ namespace UI.LevelUI.Controller
         /// <summary>
         /// ego ID
         /// </summary>
-        public int EgoID { get; private set; }
+        public int EgoID { get;  set; }
 
 
         private void Awake()
         {
             EgoButton = GetComponent<Button>();
             EgoName = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            
-            string[] name = gameObject.name.Split('_');
-            if (name.Length > 1)
-            {
-                EgoID = int.Parse(name[1]);
-            }
-            else
-            {
-                Debug.LogError("EgoItem name format error, please check the name format.");
-            }
 
 
             UIManager.Instance.RegisterUI("LevelUI.Controller.EgoItem", EgoButton);

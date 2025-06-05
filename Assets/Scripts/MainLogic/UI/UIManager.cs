@@ -186,13 +186,17 @@ public class UIManager : Singleton<UIManager>
     }
 
     //刷新所有EgoItems,后续放入游戏逻辑中
-    public void RefreshEgoContainer(List<Ego> egos)
+    public void RefreshEgoContainer()
     {
+        List<Ego> egos = ControllerManager.Instance.AllEgoContainers[ControllerManager.Instance.Player.CurrentUnit].UnitEgo;
         EgoContainer.RefreshEgoItems(egos);
     }
 
-    public void RefreshInformationButton(UnitData information)
+    public void RefreshInformationButton()
     {
+        RuntimeUnitData information =
+            ControllerManager.Instance.AllRuntimeUnitData[ControllerManager.Instance.Player.CurrentUnit];
+        
         Button button = ButtonsDic["LevelUI.InformationDisplay.InformationDisplayButton"][0];
 
         button.gameObject.GetComponent<InformationDisplayButton>().Refresh(information);

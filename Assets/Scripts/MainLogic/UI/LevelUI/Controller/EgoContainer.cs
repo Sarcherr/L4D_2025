@@ -45,7 +45,6 @@ namespace UI.LevelUI.Controller
             UIManager.Instance.RegisterEgoContainer(this);
         }
         
-        //注意此函数尚未被调用过
         public void RefreshEgoItems(List<Ego> egos)
         {
             CurrentEgoItems.Clear();
@@ -54,14 +53,14 @@ namespace UI.LevelUI.Controller
             {
                 GameObject go = Instantiate(EgoItemPrefab, EgoContainerTransform);
                 go.transform.SetParent(EgoContainerTransform);
-                go.name = "EgoItem_" + egoIndex;
+                go.GetComponent<EgoItem>().EgoID = egoIndex;
                 go.GetComponent<EgoItem>().SetItemEgo(ego);
                 go.GetComponent<EgoItem>().Refresh();
                 CurrentEgoItems.Add(go.GetComponent<EgoItem>());
                 egoIndex++;
             }
         }
-        
+
         // todo: Ego槽的特定规则选取
     }
 
