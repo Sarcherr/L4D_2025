@@ -215,7 +215,7 @@ public static class GlobalData
                 belongName = belongName,
                 limit = limit,
                 egoConsumption = egoConsumption,
-                uiControlKind = uiControlKind,
+                uiControlType = uiControlKind,
                 description = description
             };
             if (!PowerDataDic.TryAdd(powerData.name, powerData))
