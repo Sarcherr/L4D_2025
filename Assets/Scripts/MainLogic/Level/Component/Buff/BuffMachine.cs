@@ -50,14 +50,16 @@ public class BuffMachine
         }
     }
     /// <summary>
-    /// 更新指定阶段的所有Buff
+    /// 更新对应单位指定阶段的所有Buff
     /// </summary>
+    /// <param name="unitName"></param>
     /// <param name="stage"></param>
-    public void UpdateBuffs(TurnStage stage)
+    public void UpdateBuffs(string unitName, TurnStage stage)
     {
         if (UnitBuffs.ContainsKey(stage))
         {
-            var buffs = UnitBuffs[stage];
+            // 获取指定单位对应阶段的所有Buff
+            var buffs = UnitBuffs[stage].Where(b => b.BelongName == unitName).ToList();
             foreach (var buff in buffs.ToList()) // 使用ToList()避免修改集合时的异常
             {
                 Executer.ExecuteBuff(buff, "Update");
