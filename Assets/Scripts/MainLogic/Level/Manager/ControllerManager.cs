@@ -138,6 +138,10 @@ public class ControllerManager : Singleton<ControllerManager>
     public void OnTurnStart()
     {
         CurrentController?.OnTurnStart();
+        if (CurrentUnit != null)
+        {
+            BuffMachine.UpdateBuffs(CurrentUnit.Name, TurnStage.Start);
+        }
     }
     /// <summary>
     /// 每个单位的回合结束时调用
@@ -145,5 +149,9 @@ public class ControllerManager : Singleton<ControllerManager>
     public void OnTurnEnd()
     {
         CurrentController?.OnTurnEnd();
+        if (CurrentUnit != null)
+        {
+            BuffMachine.UpdateBuffs(CurrentUnit.Name, TurnStage.End);
+        }
     }
 }
