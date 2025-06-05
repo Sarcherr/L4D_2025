@@ -47,8 +47,13 @@ namespace UI.LevelUI.Controller
         
         public void RefreshEgoItems(List<Ego> egos)
         {
+            foreach (EgoItem item in CurrentEgoItems)
+            {
+                Destroy(item.gameObject);
+            }
             CurrentEgoItems.Clear();
-            //todo:删除生成的EgoItem
+            
+            
             int egoIndex = 0;
             foreach (Ego ego in egos)
             {
