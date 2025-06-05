@@ -106,6 +106,8 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
 
         // 刷新UI
         UIManager.Instance.RefreshSkillButton();
+        UIManager.Instance.RefreshInformationButton();
+        UIManager.Instance.RefreshEgoContainer();
     }
     /// <summary>
     /// 添加回合(目前只用于添加额外回合)
@@ -271,6 +273,8 @@ public class TurnManager : Singleton<TurnManager>, ITurnManager
         }
         // 刷新UI
         UIManager.Instance.RefreshSkillButton();
+        UIManager.Instance.RefreshInformationButton();
+        UIManager.Instance.RefreshEgoContainer();
     }
 
     public void OnTurnStart()

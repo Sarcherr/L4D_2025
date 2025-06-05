@@ -7,15 +7,15 @@ using UnityEngine.UI;
 public class InformationDisplayButton : MonoBehaviour
 {
     public Button Button { get; private set; }
-    public UnitData UnitData { get; private set; }
+    public RuntimeUnitData UnitData { get; private set; }
     public TextMeshProUGUI InformationText { get; private set; }
     public GameObject InformationPanel { get; private set; }
     
     private void Awake()
     {
         Button = GetComponent<Button>();
-        InformationText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         InformationPanel = transform.GetChild(1).gameObject;
+        InformationText = InformationPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         InformationPanel.SetActive(false);
 
         if (InformationPanel == null)
@@ -26,13 +26,15 @@ public class InformationDisplayButton : MonoBehaviour
         UIManager.Instance.RegisterUI("LevelUI.InformationDisplay.InformationDisplayButton", Button);
     }
 
-    public void Refresh(UnitData data)
+    public void Refresh(RuntimeUnitData data)
     {
         UnitData = data;
         if (UnitData != null)
         {
             // todo: 根据UnitData刷新信息文本
-            //InformationText.text = UnitData.;
+            InformationText.text = UnitData.Name +"\n" +
+                                   "HP: " + UnitData.CurrentHealth + "\n" +
+                                   "Attack: " + UnitData.CurrentAttack + "\n";
         }
         else
         {
@@ -45,8 +47,16 @@ public class InformationDisplayButton : MonoBehaviour
 
     private void DisplayInformation()
     {
-        InformationPanel.SetActive(true);
-        // todo: 显示信息面板内容
+        if (!InformationPanel.activeInHierarchy)
+        {
+            InformationPanel.SetActive(true);
+        }
+        else
+        {
+            InformationPanel.SetActive(false);
+        }
+        
+        
     }
     
 }
