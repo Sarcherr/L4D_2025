@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Controller : IController
 {
@@ -68,10 +70,9 @@ public class Controller : IController
     /// <param name="power">能力名称</param>
     public void Power(string power)
     {
-        if(ActionPoint > 0)
+        if (ActionPoint > 0)
         {
             Debug.Log($"Unit {CurrentUnit} use power {power}");
-
             PowerRequest request = new PowerRequest()
             {
                 Name = power,
@@ -80,11 +81,61 @@ public class Controller : IController
             };
 
             PowerManager.Instance.HandleRequest(request);
-        }
-        else
-        {
-            Debug.LogWarning($"Unit {CurrentUnit} has no action points left to use power {power}.");
-            // todo: 可以的话弹出提示UI
+            if (GlobalData.PowerDataDic.TryGetValue(power, out PowerData powerData))
+            {
+                if (powerData.uiControlKind == "Enemy" || powerData.uiControlKind == "Player")
+                {
+                    GameObject senceUnit = GameObject.Find(CurrentUnit);
+                    TargetSelectionManager.Instance.StartSelection(powerData.uiControlKind, senceUnit, (selectedUnitName) =>
+                    { List<string> finalTargets = new List<string> { selectedUnitName };
+                        UIPowerMessage UiMessage = new UIPowerMessage()
+                        {
+                            Name = power,
+                            Origin = powerData.belongName,
+                            Target = finalTargets,
+                            EgoComsumption = null
+                        };
+                        PowerManager.Instance.GeneratePower(UiMessage);
+                    });
+                }
+                else
+                {
+                    List<string> Target = new List<string>();
+                    switch (powerData.uiControlKind)
+                    {
+                        case "AllEnemy":
+                            foreach (KeyValuePair<string, RuntimeUnitData> pair in ControllerManager.Instance.Enemy.RuntimeUnits)
+                            {
+                                Target.Add(pair.Key);
+                            }
+                            break;
+                        case "AllPlayer":
+                            foreach (KeyValuePair<string, RuntimeUnitData> pair in ControllerManager.Instance.Player.RuntimeUnits)
+                            {
+                                Target.Add(pair.Key);
+                            }
+                            break;
+                        case "Self":
+                            Target.Add(powerData.belongName);
+                            break;
+                        default:
+                            break;
+                    }
+                    UIPowerMessage UiMessage3 = new UIPowerMessage()
+                    {
+                        Name = power,
+                        Origin = powerData.belongName,
+                        Target = Target,
+                        EgoComsumption = null
+                    };
+                    PowerManager.Instance.GeneratePower(UiMessage3);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Unit {CurrentUnit} has no action points left to use power {power}.");
+                // todo: 可以的话弹出提示UI
+            }
         }
     }
     /// <summary>
