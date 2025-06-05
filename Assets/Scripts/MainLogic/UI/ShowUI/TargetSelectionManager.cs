@@ -3,43 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetSelectionManager : MonoBehaviour
+public class TargetSelectionManager : MonoSingleton<TargetSelectionManager>
 {
-    public static TargetSelectionManager Instance;
     public LayerMask unitLayerMask;
     public GameObject ArrowGameObject;
-    // ÕâÈı¸ö×Ö¶Î»áÔÚ StartSelection Ê±±»ÉèÖÃ
-    private Action<string> onUnitSelected;     // »Øµ÷£ºÑ¡ÖĞºó°ÑÃû×Ö´«»ØÈ¥
-    private string requiredAffiliation;         // ÀıÈç "Enemy"¡¢"Player"¡¢"Unit"¡£±íÊ¾Ö»ÄÜÑ¡ÄÄÒ»Àà
-    private GameObject sourceUnit;              // Ê©·¨Õß£¨ÓÃËüÀ´»­¼ıÍ·Æğµã£©
+    // è¿™ä¸‰ä¸ªå­—æ®µä¼šåœ¨ StartSelection æ—¶è¢«è®¾ç½®
+    private string requiredAffiliation;         // ä¾‹å¦‚ "Enemy"ã€"Player"ã€"Unit"ã€‚è¡¨ç¤ºåªèƒ½é€‰å“ªä¸€ç±»
+    private GameObject sourceUnit;              // æ–½æ³•è€…ï¼ˆç”¨å®ƒæ¥ç”»ç®­å¤´èµ·ç‚¹ï¼‰
+    private string powerName;                   // æ–½æ³•çš„æŠ€èƒ½åç§°
 
     private bool isSelecting = false;
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
     }
 
-    public void StartSelection(string affiliation, GameObject caster, Action<string> callback)
+    /// <summary>
+    /// å¼€å§‹é€‰æ‹©ç›®æ ‡å•ä½
+    /// </summary>
+    /// <param name="request"></param>
+    public void StartSelection(PowerRequest request)
     {
-        if (isSelecting)
-        {
-            Debug.LogWarning("ÒÑÓĞÒ»´ÎÄ¿±êÑ¡ÔñÉĞÎ´Íê³É£¬ÎŞ·¨ÖØ¸´µ÷ÓÃ StartSelection¡£");
-            return;
-        }
-
-        requiredAffiliation = affiliation;
-        sourceUnit = caster;
-        onUnitSelected = callback;
+        sourceUnit = GameObject.Find(request.Origin);
+        var data = GlobalData.PowerDataDic[request.Name];
+        powerName = request.Name;
+        requiredAffiliation = data.uiControlType;
         isSelecting = true;
 
-
+        Debug.Log($"å¼€å§‹é€‰æ‹©ç›®æ ‡å•ä½ï¼š{sourceUnit.name} ä½¿ç”¨æŠ€èƒ½ {powerName}ï¼Œè¦æ±‚é˜µè¥ï¼š{requiredAffiliation}");
     }
     private void Update()
     {
         if (!isSelecting) return;
 
-        // ½ö¼àÌıÊó±ê×ó¼üµã»÷
+        Debug.Log("TargetSelectionManager: æ­£åœ¨é€‰æ‹©ç›®æ ‡å•ä½...");
+
+        // ä»…ç›‘å¬é¼ æ ‡å·¦é”®ç‚¹å‡»
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -57,16 +55,27 @@ public class TargetSelectionManager : MonoBehaviour
                     {
                         string selectedName = clickedObj.name;
                         DrawArrow(sourceUnit.transform.position, clickedObj.transform.position);
-                        onUnitSelected?.Invoke(selectedName);
+
+                        var message = new UIPowerMessage
+                        {
+                            Name = powerName,
+                            Origin = sourceUnit.name,
+                            Target = new List<string> { selectedName },
+                            EgoComsumption = null,
+                            NeedTarget = true,
+                            NeedTargetEgo = false,
+                        };
+
+                        // å‘é€æ¶ˆæ¯ç»™ PowerManager
+                        PowerManager.Instance.GeneratePower(message);
 
                         isSelecting = false;
-                        onUnitSelected = null;
                         sourceUnit = null;
                         requiredAffiliation = null;
                     }
                     else
                     {
-                        Debug.Log("´Ëµ¥Î»²»ÔÚÔÊĞíÑ¡ÔñµÄÕóÓª£º" + requiredAffiliation);
+                        Debug.Log("æ­¤å•ä½ä¸åœ¨å…è®¸é€‰æ‹©çš„é˜µè¥ï¼š" + requiredAffiliation);
                     }
                 }
             }
@@ -76,7 +85,7 @@ public class TargetSelectionManager : MonoBehaviour
     {
         if (ArrowGameObject == null)
         {
-            Debug.LogError("ÇëÔÚ Inspector Àï°Ñ arrowPrefab ¹ÒÉÏÒ»¸ö´ø LineRenderer µÄÔ¤ÖÆ¼ş¡£");
+            Debug.LogError("è¯·åœ¨ Inspector é‡ŒæŠŠ arrowPrefab æŒ‚ä¸Šä¸€ä¸ªå¸¦ LineRenderer çš„é¢„åˆ¶ä»¶ã€‚");
             return;
         }
 
@@ -84,7 +93,7 @@ public class TargetSelectionManager : MonoBehaviour
         LineRenderer lr = arrow.GetComponent<LineRenderer>();
         if (lr == null)
         {
-            Debug.LogError("arrowPrefab ÉÏ±ØĞë¹ÒÓĞ LineRenderer ×é¼ş£¡");
+            Debug.LogError("arrowPrefab ä¸Šå¿…é¡»æŒ‚æœ‰ LineRenderer ç»„ä»¶ï¼");
             Destroy(arrow);
             return;
         }

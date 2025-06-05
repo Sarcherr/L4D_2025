@@ -23,7 +23,7 @@ public struct PowerData
     /// <summary>
     /// UI操作类型
     /// </summary>
-    public string uiControlKind;
+    public string uiControlType;
     /// <summary>
     /// 技能描述
     /// </summary>

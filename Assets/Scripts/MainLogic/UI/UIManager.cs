@@ -276,6 +276,12 @@ public struct UIPowerMessage
     /// Ego消耗
     /// </summary>
     public List<Ego> EgoComsumption;
-    
-
+    /// <summary>
+    /// 是否需要目标选择
+    /// </summary>
+    public bool NeedTarget;
+    /// <summary>
+    /// 是否需要目标Ego选择
+    /// </summary>
+    public bool NeedTargetEgo;
 }
